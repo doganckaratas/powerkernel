@@ -1,0 +1,52 @@
+#!/bin/sh
+### ./configure 0.1
+### PowerKernel
+### 2011 - 2017 -- Doğan Can Karataş
+### Son Değişiklik - 02/2017 - v0rev1
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # #
+# gerekli toollar:
+# nasm
+# qemu-system-i386
+# i686-elf-gcc
+# grub-pc-bin
+# xorriso
+# # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+$PAROLA="dogan4383" > /dev/null 2>&1
+
+echo "[+] gerekli paketler denetleniyor."
+if [ ! -d /opt/cross ]; then
+echo "[!] i686-elf bulunamadı. yükleniyor..."
+cd /tmp/
+wget https://www.dropbox.com/s/2nwjav50uxz6d46/i686-elf-4.9.1-Linux-x86_64.tar.xz?dl=0 --no-check-certificate
+tar xf i686-elf-4.9.1-Linux-x86_64.tar.xz
+cd i686-elf-4.9.1-Linux-x86_64
+mkdir /opt/cross
+cp -R /tmp/i686-elf-4.9.1-Linux-x86_64/* /opt/cross
+echo "export PATH=/opt/cross/bin:$PATH" >> /etc/profile
+rm -rf /tmp/i686-elf-4.9.1-Linux-x86_64
+rm /tmp/i686-elf-4.9.1-Linux-x86_64.tar.xz
+fi
+echo "[>] i686-elf bulundu."
+if ! which nasm > /dev/null; then 
+echo "[!] nasm bulunamadı. yükleniyor..." 
+echo $PAROLA | sudo -S apt-get install nasm -y > /dev/null 2>&1
+fi
+echo "[>] nasm bulundu."
+if ! which qemu-system-i386 > /dev/null; then
+echo "[!] qemu bulunamadı. yükleniyor..."
+echo $PAROLA | sudo -S apt-get install qemu-system-i386 -y > /dev/null 2>&1
+fi
+echo "[>] qemu bulundu."
+if ! which grub-mkrescue > /dev/null; then
+echo "[!] grub-pc-bin bulunamadı. yükleniyor..."
+echo $PAROLA | sudo -S apt-get install grub-pc-bin -y > /dev/null 2>&1
+fi
+echo "[>] grub-pc-bin bulundu."
+if ! which xorriso > /dev/null; then
+echo "[!] xorriso bulunamadı. yükleniyor..."
+echo $PAROLA | sudo -S apt-get install xorriso -y > /dev/null 2>&1
+fi
+echo "[>] xorriso bulundu."
+echo "[+] işlem tamamlandı. tüm paketler sistemde mevcut."
