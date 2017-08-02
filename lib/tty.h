@@ -1,9 +1,8 @@
-/**
-### tty.h
-### PowerKernel 0.2
+/*
+### PowerKernel 
 ### 2011 - 2017 -- Doğan Can Karataş
-### Son Değişiklik - 02/2017
-**/
+### Son Değişiklik - 08/2017 - v0rev3
+*/
 
 #ifndef __TTY_H__
 #define __TTY_H__
@@ -37,12 +36,11 @@ uint16_t* base_addr;
 
 uint8_t color_pair(enum vga_colors, enum vga_colors );
 uint16_t colored_char(char , uint8_t );
-void tty_init();
+void tty_8025_init();
 void setcolor(uint8_t );
 void putchar_at(char, uint8_t , size_t , size_t );
-void printf(string, ...);
+void printf(char*, ...);
 void putchar(char );
 void clear(void );
 
 #endif
-#include "tty.c"

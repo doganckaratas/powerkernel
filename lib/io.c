@@ -1,22 +1,31 @@
-/**
-### io.c 
-### PowerKernel 0.2
+/*
+### PowerKernel 
 ### 2011 - 2017 -- Doğan Can Karataş
-### Son Değişiklik - 02/2017
-**/
+### Son Değişiklik - 08/2017 - v0rev3
+*/
 
+#include <stddef.h>
+#include <stdint.h>
+#include <io.h>
 
-inline void memcpy(void *dest, void *src, int n)
+void memset(void *dest, int data, size_t size) 
+{
+	char* dst=(char*) dest;
+	for(;size;size--,dst++)
+		*dst=data;
+}
+
+void memcpy(void *dest, void *src, size_t size)
 {
    char *dst=dest;
-   for (;n;n--,dest++,src++)
+   for (;size;size--,dest++,src++)
         *dst=*((char*)src);
 }
 
-inline int memcmp(void *dest, void *source, int size)
+int memcmp(void *dest, void *source, size_t size)
 {
 	char *dst = dest, *src = source;
-	for(int i = 0; i < size; i++)
+	for(size_t i = 0; i < size; i++)
 	{
 		if(dst[i] == src[i])
 		{
@@ -30,14 +39,14 @@ inline int memcmp(void *dest, void *source, int size)
 	return 0;
 }
 
-inline unsigned char inportb(unsigned int port)
+unsigned char inportb(unsigned int port)
 {
    unsigned char ret;
    asm volatile ("inb %%dx,%%al":"=a" (ret):"d" (port));
    return ret;
 }
 
-inline void outportb(unsigned int port,unsigned char value)
+void outportb(unsigned int port,unsigned char value)
 {
    asm volatile ("outb %%al,%%dx": :"d" (port), "a" (value));
 }

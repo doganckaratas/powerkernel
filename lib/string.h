@@ -1,20 +1,16 @@
-/**
-### string.h
-### PowerKernel 0.2
+/*
+### PowerKernel 
 ### 2011 - 2017 -- Doğan Can Karataş
-### Son Değişiklik - 02/2017
-**/
-
+### Son Değişiklik - 08/2017 - v0rev3
+*/
 
 #ifndef __STRING_H__
 #define __STRING_H__
 
 char* itoa(int, int);
-size_t strlen(const string );
-inline void strcpy(string, string );
-void strtok(string, string[], char);
-int strseek(string, char);
-string substring(string, int, int);
+size_t strlen(const char*);
+void strcpy(char*, char*);
+void strtok(char*, char*[], char);
+int strseek(char*, char);
 
 #endif
-#include "string.c"

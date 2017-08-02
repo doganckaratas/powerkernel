@@ -1,10 +1,15 @@
-/**
-### tty.c
-### PowerKernel 0.2
+/*
+### PowerKernel 
 ### 2011 - 2017 -- Doğan Can Karataş
-### Son Değişiklik - 02/2017
-**/
+### Son Değişiklik - 08/2017 - v0rev3
+*/
 
+#include <stddef.h>
+#include <stdint.h>
+#include <stdarg.h>
+#include <types.h>
+#include <string.h>
+#include <tty.h>
 
 // soft buffer kullan ve base address e flush et, böyle çok unstable
 
@@ -28,7 +33,7 @@ void clear() // ekranı null basar
 	}
 }
 
-void tty_init() // text mode 80x25 init
+void tty_8025_init() // text mode 80x25 init
 {
 	terminal_row = 0;
 	terminal_column = 0;
@@ -68,27 +73,58 @@ void putchar(char c)
 	}
 }
 
-void printf(string str, ...) 
+void printf(char* str, ...) // variadic printf template | dogan can karatas 08/2017
 {
 	//va_list args; // variadic fonksiyon
 	// str'yi parse et, if else anahtarlarıyla kaç argüman olduğunu çıkar = count
 	// va_start(args,count) 
 	// sonra her bir argüman için if else'ler ile tiplere göre char print yap
 	// va_end(args) ile bitir.
-	size_t string_len = strlen(str);
-	for (size_t i = 0; i < string_len; i++)
+	int i;
+	//float f; //bunları ilerde implement edicem, ayrıca /t, /a gibi escapeleri de eklicem
+	//double d;
+	char ch;
+	char* s;
+	char* buffer;
+	va_list args;
+	va_start(args,str);
+	
+	for (size_t id = 0; id < strlen(str); id++)
 	{
-		switch(str[i]) // escape sequence ları yakala
-		{
-			case '\n': //newline
-				terminal_row += 1;
-				terminal_column = 0;
-				break;
-			default:
-				putchar(str[i]);
-				break;		
+		if(str[id] != '%') {
+			switch(str[id]) {
+				case '\n':
+					terminal_row +=1;
+					terminal_column = 0;
+					break;
+				default:
+					putchar(str[id]);
+					break;
+			}
+		} else {
+			switch(str[id+1]) {
+				case 'd':
+					i = va_arg(args, int);
+					buffer = itoa(i,10);
+					for(size_t j = 0; j < strlen(buffer); j++)
+						putchar(buffer[j]);
+					id++;
+					break;
+				case 'c':
+					ch = (char) va_arg(args,int);
+					putchar(ch);
+					id++;
+					break;
+				case 's':
+					s = va_arg(args,char*);
+					for(size_t j = 0; j < strlen(s); j++) 
+						putchar(s[j]);
+					id++;
+					break;		
+			}
 		}
 	}
+	va_end(args);
 }
 
 /**

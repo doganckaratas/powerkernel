@@ -1,12 +1,15 @@
-/**
-### string.c
-### PowerKernel 0.2
+/*
+### PowerKernel 
 ### 2011 - 2017 -- Doğan Can Karataş
-### Son Değişiklik - 02/2017
-**/
+### Son Değişiklik - 08/2017 - v0rev3
+*/
 
+#include <stddef.h>
+#include <stdint.h>
+#include <types.h>
+#include <string.h>
 
-size_t strlen(const string str) 
+size_t strlen(const char* str) 
 {
 	size_t ret = 0;
 	while ( str[ret] != 0 )
@@ -14,7 +17,7 @@ size_t strlen(const string str)
 	return ret;
 }
 
-inline void strcpy(string src, string dst)
+void strcpy(char* src, char* dst)
 {
 	for(int i = 0; i < (int) strlen(dst); i++)
 	{
@@ -27,7 +30,7 @@ inline void strcpy(string src, string dst)
 	}
 }
 
-int strseek(string str, char delimiter) // delimiter sayısı döndürür
+int strseek(char* str, char delimiter) // delimiter sayısı döndürür
 {
 	int count = 0;
 	for(int i = 0; i < (int) strlen(str); i++)
@@ -45,68 +48,6 @@ int strseek(string str, char delimiter) // delimiter sayısı döndürür
 }
 
 /**
-void substring(string str, string result, int start, int count)
-{
-	for(int i = 0; i <= count; i++)
-	{
-		result[i] = '\0';
-	}
-	string buffer;
-	int startcounter = 0;
-	for(int i = 0; i < (int) strlen(str); i++)
-	{
-		if( i  < start )
-		{
-			continue;
-		}
-		else
-		{
-			if(startcounter < count)
-			{
-				buffer[startcounter] = str[i];
-				startcounter++;
-			}
-			else
-			{
-				continue;
-			}
-		}
-	}
-	*result = *buffer;
-}
-**/
-
-string substring(string str, int start, int count)
-{
-	string result;
-	for(int i = 0; i <= count; i++)
-	{
-		result[i] = '\0';
-	}
-	string buffer;
-	int startcounter = 0;
-	for(int i = 0; i < (int) strlen(str); i++)
-	{
-		if( i  < start )
-		{
-			continue;
-		}
-		else
-		{
-			if(startcounter < count)
-			{
-				buffer[startcounter] = str[i];
-				startcounter++;
-			}
-			else
-			{
-				continue;
-			}
-		}
-	}
-	*result = *buffer;
-	return result;
-}
 
 // STRTOKU DÜZELT, PRİNTF İÇİN FORMAT SPECİFİER TOKENİZE ET, VARİADİC FONK HALİNE GETİR.
 
@@ -132,46 +73,7 @@ void strtok(string str, string *dest, char delimiter) // delimiter karakter ile 
 		
 	}
 }
-
-/**
-char* itoa( int value, char* str, int base )
-{
-    char * rc;
-    char * ptr;
-    char * low;
-    // Check for supported base.
-    if ( base < 2 || base > 36 )
-    {
-    	*str = '\0';
-	    return str;
-    }
-    rc = ptr;
-    // Set '-' for negative decimals.
-    if ( value < 0 && base == 10 )
-    {
-        *ptr++ = '-';
-    }
-    // Remember where the numbers start.
-    low = ptr = str;
-    // The actual conversion.
-    do
-    {
-        // Modulo is negative for negative value. This trick makes abs() unnecessary.
-        *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + value % base];
-        value /= base;
-    } while ( value );
-    // Terminating the string.
-    *ptr-- = '\0';
-    // Invert the numbers.
-    while ( low < ptr )
-    {
-        char tmp = *low;
-        *low++ = *ptr;
-        *ptr-- = tmp;
-    }
-    return rc;
-}
-**/
+*/
 
 char* itoa(int val, int base)
 {

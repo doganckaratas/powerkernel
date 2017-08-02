@@ -10,35 +10,39 @@ LDFLAGS=-ffreestanding -O2 -nostdlib -lgcc
 ASMFLAGS=-felf32
 ASRC=./ldr/bootloader.asm
 CSRC=kernel.c
+DEPS=./lib/io.c ./lib/string.c ./lib/tty.c
 LDSRC=linker.ld 
 OBJA=./ldr/bootloader.o
-OBJC=kernel.o
+OBJC=kernel.o io.o string.o tty.o
 TARGET=./bin/kernel.bin
 IMAGE=powerkernel.iso
 
 # Build Rules
 
-all: assemble compile link clean
-
 .PHONY: clean
+
+all: assemble compile link clean
 
 assemble: $(ASRC)
 	$(ASM) $(ASMFLAGS) $(ASRC) -o $(OBJA)
 
 compile: $(CSRC)
-	$(CC) -c $(CSRC) -o $(OBJC) $(CFLAGS)
+	$(CC) -c $(CSRC) $(DEPS) $(CFLAGS)
 	
 link: compile assemble
 	$(CC) -T $(LDSRC) -o $(TARGET) $(LDFLAGS) $(OBJA) $(OBJC)
 	
-iso: link
+iso: link clean
 	cp $(TARGET) ./iso/boot/kernel.bin 
 	grub-mkrescue -o $(IMAGE) iso
 
-run: iso
+boot: iso clean
 	qemu-system-i386 -m 64M -cdrom $(IMAGE)
 
 clean:
 	rm -rf $(OBJA) $(OBJC)
+	
+reset: clean
+	rm -rf $(IMAGE) $(TARGET) ./iso/boot/kernel.bin 
 
 
