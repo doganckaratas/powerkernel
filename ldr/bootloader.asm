@@ -1,6 +1,6 @@
 ;### PowerKernel 
-;### 2011 - 2017 -- Doğan Can Karataş
-;### Son Değişiklik - 08/2017 - v0rev3
+;### (c) 2011 - 2017 
+;### Doğan Can Karataş -- v0.3
 
 MBALIGN     equ  1<<0                   ; align loaded modules on page boundaries
 MEMINFO     equ  1<<1                   ; provide memory map
@@ -23,7 +23,6 @@ stack_top:
 section .text
 global _start
 _start:
-
 	mov esp, stack_top
 	extern kernel_main
 	call kernel_main
