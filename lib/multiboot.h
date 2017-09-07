@@ -1,9 +1,8 @@
-/**
-### types.h
-### PowerKernel 0.2
-### 2011 - 2017 -- Doğan Can Karataş
-### Son Değişiklik - 02/2017
-**/
+/*
+### PowerKernel 
+### (c) 2011 - 2017 
+### Doğan Can Karataş -- v0.3
+*/
 
 #ifndef MULTIBOOT_HEADER
      #define MULTIBOOT_HEADER 1
