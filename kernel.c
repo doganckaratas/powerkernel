@@ -1,7 +1,7 @@
 /*
 ### PowerKernel 
-### 2011 - 2017 -- Doğan Can Karataş
-### Son Değişiklik - 08/2017 - v0rev3
+### (c) 2011 - 2017 
+### Doğan Can Karataş -- v0.3
 */
 
 #if !defined(__cplusplus)
@@ -26,7 +26,6 @@
 #if defined(__cplusplus)
 extern "C"
 #endif
-
 
 // FS KURDUKTAN SONRA FAT32 YADA BAŞKA BİR FS HEADER'INI EZMEDEN BOOTLOADER KAS.
 // memory allocator şart
