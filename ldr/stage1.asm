@@ -1,5 +1,14 @@
-BITS 16
-ORG      0x7C00
+;vanilla bootloader code 
+;powerkernel experimental
+;2017
+
+;0x0000 - 0x0200 disk physical location.
+;512 bytes - sector 0 
+;one stage loader.
+
+
+BITS    16
+ORG     0x7C00
 Start:
    jmp   Skip
    nop
@@ -57,9 +66,12 @@ Skip:
 ; ----- Display load message ----- ;
    mov si, msgLoading
    call print_s
-
+   extern kernel_main
+   mov si, msgFound
+   call print_s
+   call kernel_main
+   cli
    jmp $
-
    hlt
 
 ; ----- Predefined functions ----- ;
@@ -75,7 +87,8 @@ end:         ; Return upon function exe completion
    ret
 
 ; ----- Data ----- ;
-msgLoading db "Will be loading operating system...", 0
+msgLoading db "PowerKernel Bootloader v0.3 Initializing...", 0
+msgFound db "Kernel Found! Booting...", 0
    
 TIMES 510-($-$$) db 0
 DW 0xAA55

@@ -6,7 +6,7 @@
 # Tools and Definitions
 ASM=nasm
 CC=i686-elf-gcc
-CFLAGS=-I./lib/ -std=gnu99 -ffreestanding -O2 -Wall -Wextra -fstrength-reduce -fomit-frame-pointer -Wno-uninitialized
+CFLAGS=-g -I./lib/ -std=gnu99 -ffreestanding -O2 -Wall -Wextra -fstrength-reduce -fomit-frame-pointer -Wno-uninitialized
 LDFLAGS=-ffreestanding -O2 -nostdlib -lgcc
 ASMFLAGS=-felf32
 ASRC=./ldr/bootloader.asm
