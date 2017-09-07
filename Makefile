@@ -1,6 +1,7 @@
 ### PowerKernel 
-### 2011 - 2017 -- Doğan Can Karataş
-### Son Değişiklik - 08/2017 - v0rev3
+### (c) 2011 - 2017 
+### Doğan Can Karataş -- v0.3
+
 
 # Tools and Definitions
 ASM=nasm
@@ -18,7 +19,6 @@ TARGET=./bin/kernel.bin
 IMAGE=powerkernel.iso
 
 # Build Rules
-
 .PHONY: clean
 
 all: assemble compile link clean
@@ -44,5 +44,4 @@ clean:
 	
 reset: clean
 	rm -rf $(IMAGE) $(TARGET) ./iso/boot/kernel.bin 
-
-
+	
