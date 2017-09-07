@@ -38,12 +38,13 @@ void kernel_main()
 	tty_8025_init();
 	setcolor(color_pair(LTRED,BLACK));
 	printf("PowerKernel 0.3 Baslatiliyor.\n");
-	setcolor(color_pair(LTCYAN,BLACK));
-	printf("(c) 2017 Dogan Can Karatas. Tum Haklari Saklidir.\n\n");
+	setcolor(color_pair(LTGRAY,BLACK));
+	printf("(c) 2017 Dogan Can Karatas.\n\n");
 	setcolor(color_pair(LTGREEN,BLACK));
 	printf("%c",'>');
 	setcolor(color_pair(LTGRAY,BLACK));
-
+    int k = 10;
+    printf(" k = %d",k);
 
 }
 
