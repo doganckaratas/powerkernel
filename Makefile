@@ -29,7 +29,7 @@ assemble: $(ASRC)
 compile: $(CSRC)
 	$(CC) -c $(CSRC) $(DEPS) $(CFLAGS)
 	
-link: compile assemble
+link: assemble compile
 	$(CC) -T $(LDSRC) -o $(TARGET) $(LDFLAGS) $(OBJA) $(OBJC)
 	
 iso: link clean
