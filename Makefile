@@ -6,22 +6,21 @@
 # Tools and Definitions
 ASM=nasm
 CC=i686-elf-gcc
-CFLAGS=-g -I./lib/ -std=gnu99 -ffreestanding -O2 -Wall -Wextra -fstrength-reduce -fomit-frame-pointer -Wno-uninitialized
+CFLAGS=-I./include/ -std=gnu99 -ffreestanding -O2 -Wall -Wextra -fstrength-reduce -fomit-frame-pointer -Wno-uninitialized
 LDFLAGS=-ffreestanding -O2 -nostdlib -lgcc
 ASMFLAGS=-felf32
 ASRC=./ldr/bootloader.asm
 CSRC=kernel.c
-DEPS=./lib/io.c ./lib/string.c ./lib/tty.c
+DEPS=$(wildcard ./kernel/*.c)
 LDSRC=linker.ld 
 OBJA=./ldr/bootloader.o
-OBJC=kernel.o io.o string.o tty.o
+OBJC=$(wildcard ./*.o)
 TARGET=./bin/kernel.bin
 IMAGE=powerkernel.iso
 
 # Build Rules
-.PHONY: clean
 
-all: assemble compile link clean
+.PHONY: clean
 
 assemble: $(ASRC)
 	$(ASM) $(ASMFLAGS) $(ASRC) -o $(OBJA)
@@ -36,6 +35,8 @@ iso: link clean
 	cp $(TARGET) ./iso/boot/kernel.bin 
 	grub-mkrescue -o $(IMAGE) iso
 
+all: assemble compile link clean
+
 boot: iso clean
 	qemu-system-i386 -m 64M -cdrom $(IMAGE)
 
@@ -44,4 +45,4 @@ clean:
 	
 reset: clean
 	rm -rf $(IMAGE) $(TARGET) ./iso/boot/kernel.bin 
-	
+
