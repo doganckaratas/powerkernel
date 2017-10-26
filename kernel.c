@@ -43,8 +43,12 @@ void kernel_main()
 	setcolor(color_pair(LTGREEN,BLACK));
 	printf("%c",'>');
 	setcolor(color_pair(LTGRAY,BLACK));
-    int k = 10;
-    printf(" k = %d",k);
+    printf("%s",itoa(9,10));
+    int k;
+    for(k = 0;k<10;k++)
+    {
+        printf(" k = %d\n",k);
+    }
 
 }
 
