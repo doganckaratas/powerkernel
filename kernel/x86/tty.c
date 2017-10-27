@@ -11,64 +11,121 @@
 #include "../../include/x86/string.h"
 #include "../../include/x86/tty.h"
 
+static void write_framebuffer(char** );
+static void write_framebuffer(char** );
+static void clear_page(char** );
+static void putchar_color_coord(char , size_t , size_t );
+static char** select_page(char** , int );
+
 // soft buffer kullan ve base address e flush et, böyle çok unstable
 
-uint8_t color_pair(enum vga_colors fg, enum vga_colors bg) // fore ve back renklerinden tek parça pair yarat
+void tty_8025_init() // text mode 80x25 init
 {
-	return fg | bg << 4;
-}
- 
-uint16_t colored_char(char c, uint8_t color) // 2 byte vga renkli text karakter çifti yarat
-{
-	uint16_t c16 = c;
-	uint16_t color16 = color;
-	return c16 | color16 << 8;
+	char newbuf[WIDTH][HEIGHT*4];
+	buffer = (char**) newbuf;
+	char** page;
+	terminal_row = 0;
+	terminal_column = 0;
+	terminal_color = pair(WHITE, BLACK);
+	base_addr = (uint16_t*) 0xB8000;	// video ram base addr
+//	buffer[16][16] = pair('A', terminal_color);
+//	page = select_page(buffer, 0);
+//	write_framebuffer(page);
+//	clear_page(page);
 }
 
-void clear() // ekranı null basar
+static void write_framebuffer(char** page)
 {
+	uint16_t* pg;
+	for (size_t i = 0; i < HEIGHT; i++) {
+		for (size_t j = 0; j < WIDTH; j++) {
+			pg[i*WIDTH + j] = page[i][j];
+		}
+	}
+	base_addr = pg;
+}
+
+static char** select_page(char** buf, int start)
+{
+	char **page;
+	for (size_t i = 0; i < HEIGHT; i++) {
+		for (size_t j = 0; j < WIDTH; j++) {
+			page[j][i] = buf[j + start][i];
+		}
+	}
+	return page;
+}
+
+static void clear_page(char** page) // page'i null yapip ekrana basar
+{
+/*
+	terminal_row = 0;
+	terminal_column = 0;
+
 	for(uint16_t i = 0; i < WIDTH * HEIGHT * 2 ; i++)
 	{
 		putchar('\0');
 	}
-}
+*/
 
-void tty_8025_init() // text mode 80x25 init
-{
-	terminal_row = 0;
-	terminal_column = 0;
-	terminal_color = color_pair(WHITE, BLACK);
-	base_addr = (uint16_t*) 0xB8000;	// video ram base addr
-	for (size_t y = 0; y < HEIGHT; y++) 
-	{
-		for (size_t x = 0; x < WIDTH; x++) 
-		{
-			const size_t i = y * WIDTH + x;
-			base_addr[i] = colored_char(' ', terminal_color);
+	for (size_t i = 0; i < HEIGHT; i++) {
+		for (size_t j = 0; j < WIDTH; j++) {
+			page[j][i] = '\0';
 		}
 	}
+	terminal_row = 0;
+	terminal_column = 0;
+	write_framebuffer(page);
 }
- 
+
+
 void setcolor(uint8_t color) //farklı renkler seçer putchar ve printf için
 {
 	terminal_color = color;
 }
  
-void putchar_color_coord(char c, uint8_t color, size_t x, size_t y) // explicit çağırma
+static void putchar_color_coord(char c, size_t x, size_t y) // explicit çağırma
 {
 	const size_t i = y * WIDTH + x;
-	base_addr[i] = colored_char(c, color);
+	base_addr[i] = pair(c, terminal_color);
+}
+
+static void scroll_framebuffer() // old
+{
+	for (size_t i = 1; i < HEIGHT; i++) {
+		for (size_t j = 0; j < WIDTH; j++) {
+			base_addr[(i - 1)*WIDTH + j] = base_addr[i*WIDTH + j];
+		}
+	}
+	for (size_t i = 0; i < WIDTH; i++) {
+		base_addr[(HEIGHT - 1)*WIDTH + i] = '\0';
+	}
+	terminal_row = HEIGHT;
+	terminal_column = 0;
 }
 
 void putchar(char c) // add screen buffer scroll feature for more than 25 lines.
 {
-	putchar_color_coord(c, terminal_color, terminal_column, terminal_row);
-	if (++terminal_column == WIDTH) 
-	{
-		terminal_column = 0;
-		if (++terminal_row == HEIGHT)
-		{
-			terminal_row = 0;
+	if (c == '\n') {
+		if (terminal_row < HEIGHT) {
+			terminal_row += 1;
+			terminal_column = 0;
+		} else {
+			scroll_framebuffer();
+		}
+		base_addr[(HEIGHT -1)*WIDTH + terminal_column] = pair(c,terminal_color);
+
+	} else if (c == '\t') {
+		if (WIDTH - terminal_column < TAB) {
+			terminal_column = TAB - WIDTH + terminal_column;
+			terminal_row += 1;
+		} else {
+			terminal_column += TAB;
+		}
+	} else {
+		putchar_color_coord(c, terminal_column, terminal_row);
+		if ( ++terminal_column == WIDTH) {
+			terminal_column = 0;
 		}
 	}
 }
@@ -89,18 +146,9 @@ void printf(char* str, ...) // variadic printf template | dogan can karatas 08/2
 	va_list args;
 	va_start(args,str);
 	
-	for (size_t id = 0; id < strlen(str); id++)
-	{
+	for (size_t id = 0; id < strlen(str); id++) {
 		if(str[id] != '%') {
-			switch(str[id]) {
-				case '\n':
-					terminal_row +=1;
-					terminal_column = 0;
-					break;
-				default:
-					putchar(str[id]);
-					break;
-			}
+			putchar(str[id]);
 		} else {
 			switch(str[id+1]) {
 				case 'd':

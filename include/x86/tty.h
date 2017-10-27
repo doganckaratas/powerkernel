@@ -27,18 +27,36 @@ enum vga_colors
 	WHITE 		= 15
 };	
 
-static const size_t WIDTH = 80;
-static const size_t HEIGHT = 25;
+
+// [ AAAA BBBB CCCCC DDDD ]  -> framebuffer
+// ( ==== ) -> video hardware memory
+// first line selected
+// [ {AAAA} BBBB CCCC DDDD ]
+//     v
+// ( AAAA ) -> to the video output
+// second line selected
+// [ A{AAA B}BBB CCCC DDDD ]
+//      v
+//  ( AAAB ) -> to the video output
+// third line selected
+// [ AA{AA BB}BB CCCC DDDD ]
+//       v
+// ( AABB ) -> to the video output
+// ...
+
+#define pair(c, color) (c | color << 8)
+#define TAB 8
+
+static const size_t WIDTH = 80; // default screen width
+static const size_t HEIGHT = 25; // default screen height
+char **buffer; // framebuffer with 4 page.
 size_t terminal_row;
 size_t terminal_column;
 uint8_t terminal_color;
-uint16_t* base_addr;
+uint16_t* base_addr; // video hardware memory port
 
-uint8_t color_pair(enum vga_colors, enum vga_colors );
-uint16_t colored_char(char , uint8_t );
 void tty_8025_init();
 void setcolor(uint8_t );
-void putchar_at(char, uint8_t , size_t , size_t );
 void printf(char*, ...);
 void putchar(char );
 void clear(void );

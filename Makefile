@@ -19,7 +19,7 @@ IMAGE=powerkernel.iso
 
 # Build Rules
 
-.PHONY: clean
+.PHONY: clean reset
 
 assemble: $(ASRC)
 	$(ASM) $(ASMFLAGS) $(ASRC)

@@ -36,20 +36,20 @@ extern "C"
 void kernel_main() 
 {
 	tty_8025_init();
-	setcolor(color_pair(LTRED,BLACK));
+	setcolor(pair(LTRED,BLACK));
 	printf("PowerKernel 0.3 Baslatiliyor.\n");
-	setcolor(color_pair(LTGRAY,BLACK));
+	setcolor(pair(LTGRAY,BLACK));
 	printf("(c) 2017 Dogan Can Karatas.\n\n");
-	setcolor(color_pair(LTGREEN,BLACK));
+	setcolor(pair(LTGREEN,BLACK));
 	printf("%c",'>');
-	setcolor(color_pair(LTGRAY,BLACK));
+	setcolor(pair(LTGRAY,BLACK));
     printf("integer 0 to string  : \"%s\"\n",itoa(0,BASE_10));
     int k;
-    for(k = 0;k<10;k++)
+    for(k = 0;k<5;k++)
     {
         printf(" k = %d\n",k);
     }
-
+    printf("Merhaba\t\t\t\t\t\t\t\t\tsafa \n");
 }
 
 // kernel tüm işlemleri yaptıktan somra frontend e handoff yapmalı
