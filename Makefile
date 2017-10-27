@@ -4,17 +4,17 @@
 
 
 # Tools and Definitions
+TARGET=kernel
 ASM=nasm
 CC=i686-elf-gcc
 CFLAGS=-I./include/x86 -std=gnu99 -ffreestanding -O2 -Wall -Wextra -fstrength-reduce -fomit-frame-pointer -Wno-uninitialized
 LDFLAGS=-ffreestanding -O2 -nostdlib -lgcc
 ASMFLAGS=-felf32
-ASRC=./loader/bootloader.asm
-CSRC=kernel.c
+ASRC=./loader/x86/bootloader.asm
+CSRC=$(TARGET).c
 DEPS=$(wildcard ./kernel/x86/*.c)
 LDSRC=linker.ld 
 OBJ=$(shell find './' -name '*.o')
-TARGET=./bin/kernel.bin
 IMAGE=powerkernel.iso
 
 # Build Rules
@@ -28,12 +28,12 @@ compile: $(CSRC)
 	$(CC) -c $(CSRC) $(DEPS) $(CFLAGS)
 	
 link: assemble compile
-	$(CC) -T $(LDSRC) -o $(TARGET) $(LDFLAGS) $(OBJ)
+	$(CC) -T $(LDSRC) -o ./bin/$(TARGET).bin $(LDFLAGS) $(OBJ)
 
 all: link
 	
 iso: all
-	cp $(TARGET) ./iso/boot/kernel.bin 
+	cp ./bin/$(TARGET).bin ./iso/boot/kernel.bin 
 	grub-mkrescue -o $(IMAGE) iso
 
 boot: iso clean
@@ -43,5 +43,5 @@ clean:
 	rm -rf $(OBJ)
 	
 reset: clean
-	rm -rf $(IMAGE) $(TARGET) ./iso/boot/kernel.bin ./tmp/*
+	rm -rf $(IMAGE) ./bin/$(TARGET).bin ./iso/boot/kernel.bin
 
