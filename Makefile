@@ -6,12 +6,12 @@
 # Tools and Definitions
 ASM=nasm
 CC=i686-elf-gcc
-CFLAGS=-I./include/ -std=gnu99 -ffreestanding -O2 -Wall -Wextra -fstrength-reduce -fomit-frame-pointer -Wno-uninitialized
+CFLAGS=-I./include/x86 -std=gnu99 -ffreestanding -O2 -Wall -Wextra -fstrength-reduce -fomit-frame-pointer -Wno-uninitialized
 LDFLAGS=-ffreestanding -O2 -nostdlib -lgcc
 ASMFLAGS=-felf32
 ASRC=./loader/bootloader.asm
 CSRC=kernel.c
-DEPS=$(wildcard ./kernel/*.c)
+DEPS=$(wildcard ./kernel/x86/*.c)
 LDSRC=linker.ld 
 OBJ=$(shell find './' -name '*.o')
 TARGET=./bin/kernel.bin

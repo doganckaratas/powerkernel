@@ -7,6 +7,12 @@
 #ifndef __STRING_H__
 #define __STRING_H__
 
+enum radix{
+	BASE_2 = 2,
+	BASE_10 = 10,
+	BASE_16 = 16
+};
+
 char* itoa(int, int);
 size_t strlen(const char*);
 void strcpy(char*, char*);

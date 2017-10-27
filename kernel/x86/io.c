@@ -6,7 +6,8 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <io.h>
+#include "../../include/x86/io.h"
+
 
 void memset(void *dest, int data, size_t size) 
 {

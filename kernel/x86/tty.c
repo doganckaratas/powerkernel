@@ -7,9 +7,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdarg.h>
-#include <types.h>
-#include <string.h>
-#include <tty.h>
+#include "../../include/x86/types.h"
+#include "../../include/x86/string.h"
+#include "../../include/x86/tty.h"
 
 // soft buffer kullan ve base address e flush et, böyle çok unstable
 
@@ -60,7 +60,7 @@ void putchar_color_coord(char c, uint8_t color, size_t x, size_t y) // explicit 
 	base_addr[i] = colored_char(c, color);
 }
 
-void putchar(char c) 
+void putchar(char c) // add screen buffer scroll feature for more than 25 lines.
 {
 	putchar_color_coord(c, terminal_color, terminal_column, terminal_row);
 	if (++terminal_column == WIDTH) 
@@ -105,7 +105,7 @@ void printf(char* str, ...) // variadic printf template | dogan can karatas 08/2
 			switch(str[id+1]) {
 				case 'd':
 					i = va_arg(args, int);
-					buffer = itoa(i,10);
+					buffer = itoa(i,BASE_10);
 					for(size_t j = 0; j < strlen(buffer); j++)
 						putchar(buffer[j]);
 					id++;

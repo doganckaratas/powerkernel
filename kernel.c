@@ -10,10 +10,10 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdarg.h>
-#include <types.h>
-#include <string.h>
-#include <io.h>
-#include <tty.h>
+#include "./include/x86/types.h"
+#include "./include/x86/string.h"
+#include "./include/x86/io.h"
+#include "./include/x86/tty.h"
 
 #if defined(__linux__)
 #error "gnu capraz derleyici algilanmadi. sikinti olusabilir."
@@ -43,7 +43,7 @@ void kernel_main()
 	setcolor(color_pair(LTGREEN,BLACK));
 	printf("%c",'>');
 	setcolor(color_pair(LTGRAY,BLACK));
-    printf("%s",itoa(9,10));
+    printf("integer 0 to string  : \"%s\"\n",itoa(0,BASE_10));
     int k;
     for(k = 0;k<10;k++)
     {

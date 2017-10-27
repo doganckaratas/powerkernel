@@ -6,8 +6,8 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <types.h>
-#include <string.h>
+#include "../../include/x86/types.h"
+#include "../../include/x86/string.h"
 
 size_t strlen(const char* str) 
 {
@@ -17,7 +17,7 @@ size_t strlen(const char* str)
 	return ret;
 }
 
-void strcpy(char* src, char* dst)
+void strcpy(char* dst, char* src)
 {
 	for(int i = 0; i < (int) strlen(dst); i++)
 	{
@@ -75,15 +75,16 @@ void strtok(string str, string *dest, char delimiter) // delimiter karakter ile 
 }
 */
 
-char* itoa(int val, int base)
+
+char* itoa(int val, int base) // val == 0 workaround'u acil degismeli.
 {
+	if (val == 0) // quick workaround FIXME
+		return "0";
 	static char buf[32] = {0};
 	
 	int i = 30;
 	
 	for(; val && i ; --i, val /= base)
 		buf[i] = "0123456789abcdef"[val % base];
-	
-	return &buf[i+1];
-	
+	return (char* ) &buf[i+1];
 }
