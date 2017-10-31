@@ -8,8 +8,8 @@ TARGET=kernel
 ASM=nasm
 CC=i686-elf-gcc
 CFLAGS=-I./include/x86 -std=gnu99 -ffreestanding -O2 -Wall -Wextra -fstrength-reduce -fomit-frame-pointer -Wno-uninitialized
-LDFLAGS=-ffreestanding -O2 -nostdlib -lgcc
-ASMFLAGS=-felf32
+LDFLAGS=-ffreestanding -O2 -nostdlib -m32
+ASMFLAGS=-felf
 ASRC=./loader/x86/bootloader.asm
 CSRC=$(TARGET).c
 DEPS=$(wildcard ./kernel/x86/*.c)
