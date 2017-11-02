@@ -1,6 +1,6 @@
 /*
-### PowerKernel 
-### (c) 2011 - 2017 
+### PowerKernel
+### (c) 2011 - 2017
 ### Doğan Can Karataş -- v0.3
 */
 
@@ -11,7 +11,6 @@
 #include "../../include/x86/string.h"
 #include "../../include/x86/tty.h"
 
-static void write_framebuffer(char** );
 static void write_framebuffer(char** );
 static void clear_page(char** );
 static void putchar_color_coord(char , size_t , size_t );
@@ -83,7 +82,7 @@ void setcolor(uint8_t color) //farklı renkler seçer putchar ve printf için
 {
 	terminal_color = color;
 }
- 
+
 static void putchar_color_coord(char c, size_t x, size_t y) // explicit çağırma
 {
 	const size_t i = y * WIDTH + x;
@@ -113,7 +112,7 @@ void putchar(char c) // add screen buffer scroll feature for more than 25 lines.
 		} else {
 			scroll_framebuffer();
 		}
-		base_addr[(HEIGHT -1)*WIDTH + terminal_column] = pair(c,terminal_color);
+		//base_addr[(HEIGHT -1)*WIDTH + terminal_column] = pair(c,terminal_color);
 
 	} else if (c == '\t') {
 		if (WIDTH - terminal_column < TAB) {
@@ -126,6 +125,7 @@ void putchar(char c) // add screen buffer scroll feature for more than 25 lines.
 		putchar_color_coord(c, terminal_column, terminal_row);
 		if ( ++terminal_column == WIDTH) {
 			terminal_column = 0;
+			terminal_row += 1;
 		}
 	}
 }
@@ -134,28 +134,26 @@ void printf(char* str, ...) // variadic printf template | dogan can karatas 08/2
 {
 	//va_list args; // variadic fonksiyon
 	// str'yi parse et, if else anahtarlarıyla kaç argüman olduğunu çıkar = count
-	// va_start(args,count) 
+	// va_start(args,count)
 	// sonra her bir argüman için if else'ler ile tiplere göre char print yap
 	// va_end(args) ile bitir.
-	int i;
 	//float f; //bunları ilerde implement edicem, ayrıca /t, /a gibi escapeleri de eklicem
 	//double d;
 	char ch;
 	char* s;
-	char* buffer;
+	char* i;
 	va_list args;
 	va_start(args,str);
-	
+
 	for (size_t id = 0; id < strlen(str); id++) {
 		if(str[id] != '%') {
 			putchar(str[id]);
 		} else {
 			switch(str[id+1]) {
 				case 'd':
-					i = va_arg(args, int);
-					buffer = itoa(i,BASE_10);
-					for(size_t j = 0; j < strlen(buffer); j++)
-						putchar(buffer[j]);
+					i = itoa(va_arg(args, int),BASE_10);
+					for(size_t j = 0; j < strlen(i); j++)
+						putchar(i[j]);
 					id++;
 					break;
 				case 'c':
@@ -165,10 +163,13 @@ void printf(char* str, ...) // variadic printf template | dogan can karatas 08/2
 					break;
 				case 's':
 					s = va_arg(args,char*);
-					for(size_t j = 0; j < strlen(s); j++) 
+					for(size_t j = 0; j < strlen(s); j++)
 						putchar(s[j]);
 					id++;
-					break;		
+					break;
+				default:
+					id++;
+					break;
 			}
 		}
 	}
@@ -182,7 +183,7 @@ void printf (const char *format, ...)
     int c;
     char* buf;
     arg++;
-    
+
     while ((c = *format++) != 0)
     {
 		if (c != '%')
@@ -196,7 +197,7 @@ void printf (const char *format, ...)
 				default:
 					putchar(c);
 					break;
-			}				
+			}
 		}
         else
         {
@@ -211,7 +212,7 @@ void printf (const char *format, ...)
 					break;
                 case 'u':
                 case 'x':
-					
+
                 case 's':
 					p = *arg++;
 						if (! p)
