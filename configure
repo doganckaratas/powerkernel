@@ -13,15 +13,18 @@
 # xorriso
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-$PAROLA="dogan4383" > /dev/null 2>&1
+if [ "$(id -u)" != "0" ]
+then
+    echo "Bu script'i superuser olarak calistiriniz."
+    exit 1
+fi
 
 echo "[+] gerekli paketler denetleniyor."
 if [ ! -d /opt/cross ]; then
 echo "[!] i686-elf bulunamadı. yükleniyor..."
 cd /tmp/
-wget https://www.dropbox.com/s/2nwjav50uxz6d46/i686-elf-4.9.1-Linux-x86_64.tar.xz?dl=0 --no-check-certificate
-mv i686-elf-4.9.1-Linux-x86_64.tar.xz?dl=0 i686-elf-4.9.1-Linux-x86_64.tar.xz
-tar xf i686-elf-4.9.1-Linux-x86_64.tar.xz
+wget https://www.dropbox.com/s/2nwjav50uxz6d46/i686-elf-4.9.1-Linux-x86_64.tar.xz?dl=0 --output-document i686-elf.tar.xz --no-check-certificate
+tar xf i686-elf.tar.xz
 cd i686-elf-4.9.1-Linux-x86_64
 mkdir /opt/cross
 cp -R /tmp/i686-elf-4.9.1-Linux-x86_64/* /opt/cross
@@ -32,22 +35,22 @@ fi
 echo "[>] i686-elf bulundu."
 if ! which nasm > /dev/null; then 
 echo "[!] nasm bulunamadı. yükleniyor..." 
-echo $PAROLA | sudo -S apt-get install nasm -y > /dev/null 2>&1
+apt-get install nasm -y > /dev/null 2>&1
 fi
 echo "[>] nasm bulundu."
 if ! which qemu-system-i386 > /dev/null; then
 echo "[!] qemu bulunamadı. yükleniyor..."
-echo $PAROLA | sudo -S apt-get install qemu-system-i386 -y > /dev/null 2>&1
+apt-get install qemu-system-i386 -y > /dev/null 2>&1
 fi
 echo "[>] qemu bulundu."
 if ! which grub-mkrescue > /dev/null; then
 echo "[!] grub-pc-bin bulunamadı. yükleniyor..."
-echo $PAROLA | sudo -S apt-get install grub-pc-bin -y > /dev/null 2>&1
+apt-get install grub-pc-bin -y > /dev/null 2>&1
 fi
 echo "[>] grub-pc-bin bulundu."
 if ! which xorriso > /dev/null; then
 echo "[!] xorriso bulunamadı. yükleniyor..."
-echo $PAROLA | sudo -S apt-get install xorriso -y > /dev/null 2>&1
+apt-get install xorriso -y > /dev/null 2>&1
 fi
 echo "[>] xorriso bulundu."
 echo "[+] işlem tamamlandı. tüm paketler sistemde mevcut."
