@@ -6,8 +6,8 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include "../../include/x86/types.h"
-#include "../../include/x86/string.h"
+#include "types.h"
+#include "string.h"
 
 size_t strlen(const char* str) 
 {

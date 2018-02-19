@@ -7,9 +7,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdarg.h>
-#include "../../include/x86/types.h"
-#include "../../include/x86/string.h"
-#include "../../include/x86/tty.h"
+#include "types.h"
+#include "string.h"
+#include "tty.h"
 
 static void write_framebuffer(char** );
 static void clear_page(char** );
@@ -146,13 +146,13 @@ void printf(char* str, ...) // variadic printf template | dogan can karatas 08/2
 	va_start(args,str);
 
 	for (size_t id = 0; id < strlen(str); id++) {
-		if(str[id] != '%') {
+		if (str[id] != '%') {
 			putchar(str[id]);
 		} else {
-			switch(str[id+1]) {
+			switch (str[id+1]) {
 				case 'd':
 					i = itoa(va_arg(args, int),BASE_10);
-					for(size_t j = 0; j < strlen(i); j++)
+					for (size_t j = 0; j < strlen(i); j++)
 						putchar(i[j]);
 					id++;
 					break;
@@ -163,8 +163,14 @@ void printf(char* str, ...) // variadic printf template | dogan can karatas 08/2
 					break;
 				case 's':
 					s = va_arg(args,char*);
-					for(size_t j = 0; j < strlen(s); j++)
+					for (size_t j = 0; j < strlen(s); j++)
 						putchar(s[j]);
+					id++;
+					break;
+				case 'x':
+					i  = itoa(va_arg(args, int), BASE_16);
+					for (size_t j = 0; j < strlen(i); j++)
+						putchar(i[j]);
 					id++;
 					break;
 				default:
