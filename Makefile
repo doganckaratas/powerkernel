@@ -7,19 +7,25 @@
 TARGET	= kernel
 AS	= nasm
 CC	= i686-elf-gcc
-CFLAGS	= -I./include/x86 -std=gnu99 -ffreestanding -O2 -Wall -Wextra -fstrength-reduce -fomit-frame-pointer -Wno-uninitialized -masm=intel
+# if platform == x86
+CFLAGS	= -I./platform/x86/include -std=gnu99 -ffreestanding -O2 -Wall -Wextra -fstrength-reduce -fomit-frame-pointer -Wno-uninitialized -masm=intel
+# else ..
 LDFLAGS	= -ffreestanding -O2 -nostdlib -m32
 AFLAGS	= -felf
-ASRC	= ./loader/x86/bootloader.asm
-CSRC	= ./kernel/$(TARGET).c
-CSRC	+= $(wildcard ./kernel/x86/*.c)
-LDSRC	= ./kernel/linker.ld 
+# if platform == x86
+ASRC	= ./platform/x86/loader/bootloader.asm
+# else ...
+CSRC	= ./src/$(TARGET).c
+# If platform == x86
+CSRC	+= $(wildcard ./platform/x86/*.c)
+# else ...
+LDSRC	= ./src/linker.ld 
 OBJ	= $(shell find './' -name '*.o')
 IMAGE	= powerkernel.iso
 
 # Build Rules
 
-.PHONY: clean reset
+.PHONY: clean reset iso boot
 
 all: link
 	
@@ -33,8 +39,11 @@ link: assemble compile
 	$(CC) -T $(LDSRC) -o ./bin/$(TARGET).bin $(LDFLAGS) $(OBJ)
 
 iso: all
-	cp ./bin/$(TARGET).bin ./iso/boot/kernel.bin 
-	grub-mkrescue -o $(IMAGE) iso
+	mkdir ./tmp
+	cp -R boot/ tmp/boot/
+	cp ./bin/$(TARGET).bin ./tmp/boot/$(TARGET).bin
+	grub-mkrescue -o $(IMAGE) tmp
+	rm -rf ./tmp
 
 boot: iso clean
 	qemu-system-i386 -m 64M -cdrom $(IMAGE) -monitor stdio 
@@ -43,5 +52,5 @@ clean:
 	rm -rf $(OBJ)
 	
 reset: clean
-	rm -rf $(IMAGE) ./bin/$(TARGET).bin ./iso/boot/$(TARGET).bin
+	rm -rf $(IMAGE) ./bin/$(TARGET).bin ./boot/$(TARGET).bin
 
