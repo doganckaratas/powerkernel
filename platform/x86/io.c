@@ -61,12 +61,12 @@ void dump_regs(void)
 			"=m" (regs.edi), "=m" (regs.ebp), "=m" (regs.esp), "=m" (regs.eip), "=m" (regs.efl)
 			);
 
-	printf("\n===== Register Dump=====\n"
+	printf("\n===== Register Dump =====\n"
 			"EAX: 0x%x\nEBX: 0x%x\nECX: 0x%x\nEDX: 0x%x\n"
 			"ESI: 0x%x\nEDI: 0x%x\nEBP: 0x%x\nESP: 0x%x\n"
 			"EIP: 0x%x\nEFL: 0x%x",
 			regs.eax, regs.ebx, regs.ecx, regs.edx,
 			regs.esi, regs.edi, regs.ebp, regs.esp,
 			regs.eip, regs.efl);
-	printf("\n========================\n");
+	printf("\n=========================\n");
 }
