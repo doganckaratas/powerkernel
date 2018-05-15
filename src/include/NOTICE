@@ -1,0 +1,2 @@
+this folder holds common headers (platform independent stuff)
+if any header contains platform dependent parts, these should be moved to /platform/<platform-name>/include folder
