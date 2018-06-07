@@ -13,7 +13,7 @@ CFLAGS	= -I./platform/x86/include -std=gnu99 -ffreestanding -O2 -Wall -Wextra -f
 LDFLAGS	= -ffreestanding -O2 -nostdlib -m32
 AFLAGS	= -felf
 # if platform == x86
-ASRC	= ./platform/x86/loader/bootloader.asm
+ASRC	= ./platform/x86/boot/bootloader.asm
 # else ...
 CSRC	= ./src/$(TARGET).c
 # If platform == x86
@@ -40,7 +40,8 @@ link: assemble compile
 
 iso: all
 	mkdir ./tmp
-	cp -R boot/ tmp/boot/
+	mkdir ./tmp/boot
+	cp -R platform/x86/boot/grub tmp/boot/grub
 	cp ./bin/$(TARGET).bin ./tmp/boot/$(TARGET).bin
 	grub-mkrescue -o $(IMAGE) tmp
 	rm -rf ./tmp

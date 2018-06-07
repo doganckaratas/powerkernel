@@ -1,9 +1,9 @@
-;vanilla bootloader code 
+;vanilla bootloader code
 ;powerkernel experimental
 ;2017
 
 ;0x0000 - 0x0200 disk physical location.
-;512 bytes - sector 0 
+;512 bytes - sector 0
 ;one stage loader.
 
 
@@ -89,6 +89,6 @@ end:         ; Return upon function exe completion
 ; ----- Data ----- ;
 msgLoading db "PowerKernel Bootloader v0.3 Initializing...", 0
 msgFound db "Kernel Found! Booting...", 0
-   
+
 TIMES 510-($-$$) db 0
 DW 0xAA55

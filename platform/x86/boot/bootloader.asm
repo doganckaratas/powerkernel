@@ -1,5 +1,5 @@
-;### PowerKernel 
-;### (c) 2011 - 2017 
+;### PowerKernel
+;### (c) 2011 - 2017
 ;### Doğan Can Karataş -- v0.3
 
 MBALIGN     equ  1<<0                   ; align loaded modules on page boundaries
@@ -13,7 +13,7 @@ align 4
 	dd MAGIC
 	dd FLAGS
 	dd CHECKSUM
- 
+
 section .bootstrap_stack, nobits
 align 4
 stack_bottom:
