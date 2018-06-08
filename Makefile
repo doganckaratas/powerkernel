@@ -9,6 +9,7 @@ AS	= nasm
 CC	= i686-elf-gcc
 # if platform == x86
 CFLAGS	= -I./platform/x86/include -std=gnu99 -ffreestanding -O2 -Wall -Wextra -fstrength-reduce -fomit-frame-pointer -Wno-uninitialized -masm=intel
+CFLAGS += -DSERIAL_DEBUG -DSERIAL_1 #debug related
 # else ..
 LDFLAGS	= -ffreestanding -O2 -nostdlib -m32
 AFLAGS	= -felf

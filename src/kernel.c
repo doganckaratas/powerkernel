@@ -37,21 +37,16 @@ extern "C"
 void kernel_main() 
 {
 	tty_8025_init();
+	serial_setup(SER1, 38400);
 	setcolor(pair(LTRED,BLACK));
 	printf("PowerKernel 0.3\n");
 	setcolor(pair(LTGRAY,BLACK));
-	printf("(c) 2011 - 2017 Dogan Can Karatas.\n\n");
-	serial_setup(SER1, 38400);
-	serial_send_str(SER1, "Selam Sdasdsadsad\r\n");
-	//setcolor(pair(LTGREEN,BLACK));
-	//printf("%c",'>');
-	//setcolor(pair(LTGRAY,BLACK));
-	//printf("integer 0 to string  : \"%s\"\n",itoa(0,BASE_10));
-	//int k;
-	//for(k = 0;k<5;k++)
-	//{
-	//printf(" k = %d\n",k);
-	//}
+	printf("(c) 2011 - 2018 Dogan Can Karatas.\n\n");
+	serial_send_str("stdin: serial\r\nstdout:serial\r\n");
+	serial_send_str("\033[31;1mPowerKernel 0.3.080618r Booting...\033[0m\r\n");
+	serial_send_str("(c) 2011 - 2018 Dogan C. Karatas."
+			" All Rights Reserved.\r\n");
+	serial_send_str("\033[33;1mYELLOW TEXT\033[0m\r\n");
 	asm ("mov eax, 48" : : );
 	asm ("mov ebx, 23" : : );
 	dump_regs();

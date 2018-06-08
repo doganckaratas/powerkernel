@@ -11,10 +11,12 @@
 #include "string.h"
 #include "tty.h"
 
+#if 0
 static void write_framebuffer(char** );
 static void clear_page(char** );
 static void putchar_color_coord(char , size_t , size_t );
 static char** select_page(char** , int );
+#endif 
 
 // soft buffer kullan ve base address e flush et, böyle çok unstable
 
@@ -22,17 +24,21 @@ void tty_8025_init() // text mode 80x25 init
 {
 	char newbuf[WIDTH][HEIGHT*4];
 	buffer = (char**) newbuf;
+#if 0
 	char** page;
+#endif
 	terminal_row = 0;
 	terminal_column = 0;
 	terminal_color = pair(WHITE, BLACK);
 	base_addr = (uint16_t*) 0xB8000;	// video ram base addr
-//	buffer[16][16] = pair('A', terminal_color);
-//	page = select_page(buffer, 0);
-//	write_framebuffer(page);
-//	clear_page(page);
+#if 0
+	buffer[16][16] = pair('A', terminal_color);
+	page = select_page(buffer, 0);
+	write_framebuffer(page);
+	clear_page(page);
+#endif
 }
-
+#if 0
 static void write_framebuffer(char** page)
 {
 	uint16_t* pg;
@@ -76,8 +82,7 @@ static void clear_page(char** page) // page'i null yapip ekrana basar
 	terminal_column = 0;
 	write_framebuffer(page);
 }
-
-
+#endif
 void setcolor(uint8_t color) //farklı renkler seçer putchar ve printf için
 {
 	terminal_color = color;
@@ -182,7 +187,7 @@ void printf(char* str, ...) // variadic printf template | dogan can karatas 08/2
 	va_end(args);
 }
 
-/**
+#if 0
 void printf (const char *format, ...)
 {
 	char **arg = (char **) &format;
@@ -235,4 +240,4 @@ void printf (const char *format, ...)
     }
 }
 
-**/
+#endif

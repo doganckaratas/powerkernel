@@ -9,8 +9,18 @@
 #include <stdarg.h>
 #include "types.h"
 #include "string.h"
-#include "serial.h"
 #include "io.h"
+#include "serial.h"
+
+#if defined(SERIAL_1)
+#define SP SER1
+#elif defined(SERIAL_2)
+#define SP SER2
+#elif defined(SERIAL_3)
+#define SP SER3
+#elif defined(SERIAL_4)
+#define SP SER4
+#endif
 
 /* Serial Mini-Info Sheet
 0x3F8 = First Serial Port
@@ -50,13 +60,13 @@ void serial_setup(uint16_t sba, uint16_t baud)
 	outportb(sba + 1, 0x00); /* clear all ints */
 	outportb(sba + 3, 0x80); /* enable DLAB */
 	outportb(sba + 0, baud & 0xFF); /* lsb of baud */
-	outportb(sba + 1, (baud >> 0xFF) & 0xFF); /* msb of baud */
+	outportb(sba + 1, (baud >> 8) & 0xFF); /* msb of baud */
 	outportb(sba + 3, 0x03); /* 8N1 setup */
 	outportb(sba + 2, 0xC7); /* enable FIFO */
 	outportb(sba + 4, 0x0B); /* IRQ bits set, Rts & dts set. */
 }
 
-inline int serial_send_available(uint16_t sba)
+int serial_send_available(uint16_t sba)
 {
 	return inportb(sba + 5) & 0x20;
 }
@@ -68,12 +78,21 @@ void serial_send_char(uint16_t sba, const char c)
 	}
 }
 
+#ifdef SERIAL_DEBUG
+void serial_send_str(const char *str)
+{
+	int i = 0;
+	for (i = 0; i < (int) strlen(str); i++) {
+		serial_send_char(SP, *(str + i));
+	}
+}
+#else
 void serial_send_str(uint16_t sba, const char *str)
 {
 	int i = 0;
 	for (i = 0; i < (int) strlen(str); i++) {
 		serial_send_char(sba, *(str + i));
 	}
-	return 0;
 }
+#endif /* SERIAL_DEBUG */
 

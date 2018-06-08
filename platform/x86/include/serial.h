@@ -13,8 +13,16 @@
 #define SER4 0x2E8
 
 void serial_setup(uint16_t, uint16_t);
+int serial_send_available(uint16_t);
+#ifdef SERIAL_DEBUG
+void serial_send_str(const char *);
+#else
 void serial_send_str(uint16_t, const char *);
+#endif /* SERIAL_DEBUG */
 void serial_send_char(uint16_t, const char);
-inline int serial_send_available(uint16_t);
+#if 0
+void serial_send(uint16_t, const char *, ...);
+#endif
+
 
 #endif /* __SERIAL_H__ */
