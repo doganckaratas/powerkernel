@@ -2,6 +2,10 @@
 ;### (c) 2011 - 2017
 ;### Doğan Can Karataş -- v0.3
 
+;Stage 2 multiboot uyumlu bootloader
+;sektor 0'da bulunan GRUB 0x7c00'a oturup burayi isletmeye baslar
+;biz de buradan stack kurup kernel_main sembolune ziplariz
+
 MBALIGN     equ  1<<0                   ; align loaded modules on page boundaries
 MEMINFO     equ  1<<1                   ; provide memory map
 FLAGS       equ  MBALIGN | MEMINFO      ; this is the Multiboot 'flag' field
@@ -21,10 +25,10 @@ resb 16384
 stack_top:
 
 section .text
-global _start
+global _start				; linker icin entry point sembolu
 _start:
-	mov esp, stack_top
-	extern kernel_main
+	mov esp, stack_top		; stack kur
+	extern kernel_main		; kernel_main sembolunu cagir
 	call kernel_main
 	cli
 .hang:
