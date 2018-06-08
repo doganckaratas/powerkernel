@@ -61,4 +61,4 @@ void printf(char*, ...);
 void putchar(char );
 void clear(void );
 
-#endif
+#endif /* __TTY_H__ */

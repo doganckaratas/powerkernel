@@ -47,7 +47,7 @@ iso: all
 	rm -rf ./tmp
 
 boot: iso clean
-	qemu-system-i386 -m 64M -cdrom $(IMAGE) -monitor stdio -serial pty
+	qemu-system-i386 -m 64M -cdrom $(IMAGE) -serial mon:stdio
 
 clean:
 	rm -rf $(OBJ)

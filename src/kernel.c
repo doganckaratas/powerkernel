@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include "types.h"
+#include "serial.h"
 #include "string.h"
 #include "io.h"
 #include "tty.h"
@@ -40,6 +41,8 @@ void kernel_main()
 	printf("PowerKernel 0.3\n");
 	setcolor(pair(LTGRAY,BLACK));
 	printf("(c) 2011 - 2017 Dogan Can Karatas.\n\n");
+	serial_setup(SER1, 38400);
+	serial_send_str(SER1, "Selam Sdasdsadsad\r\n");
 	//setcolor(pair(LTGREEN,BLACK));
 	//printf("%c",'>');
 	//setcolor(pair(LTGRAY,BLACK));
