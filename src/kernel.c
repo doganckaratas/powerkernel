@@ -37,7 +37,7 @@ extern "C"
 void kernel_main() 
 {
 	tty_8025_init();
-	serial_setup(SER1, 38400);
+	serial_setup(38400);
 	setcolor(pair(LTRED,BLACK));
 	printf("PowerKernel 0.3\n");
 	setcolor(pair(LTGRAY,BLACK));

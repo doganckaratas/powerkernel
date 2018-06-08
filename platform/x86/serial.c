@@ -55,6 +55,38 @@ SBA+6 = .  .  .  .  .  .  .  .   Modem Status Reg
 SBA+7 = .  .  .  .  .  .  .  .   Scratch Reg
 */
 
+#ifdef SERIAL_DEBUG
+void serial_setup(uint16_t baud)
+{
+	outportb(SP + 1, 0x00); /* clear all ints */
+	outportb(SP + 3, 0x80); /* enable DLAB */
+	outportb(SP + 0, baud & 0xFF); /* lsb of baud */
+	outportb(SP + 1, (baud >> 8) & 0xFF); /* msb of baud */
+	outportb(SP + 3, 0x03); /* 8N1 setup */
+	outportb(SP + 2, 0xC7); /* enable FIFO */
+	outportb(SP + 4, 0x0B); /* IRQ bits set, Rts & dts set. */
+}
+
+int serial_send_available()
+{
+	return inportb(SP + 5) & 0x20;
+}
+
+void serial_send_char(const char c)
+{
+	if (serial_send_available()) {
+		outportb(SP, c);
+	}
+}
+
+void serial_send_str(const char *str)
+{
+	int i = 0;
+	for (i = 0; i < (int) strlen(str); i++) {
+		serial_send_char(SP, *(str + i));
+	}
+}
+#else
 void serial_setup(uint16_t sba, uint16_t baud)
 {
 	outportb(sba + 1, 0x00); /* clear all ints */
@@ -78,21 +110,47 @@ void serial_send_char(uint16_t sba, const char c)
 	}
 }
 
-#ifdef SERIAL_DEBUG
-void serial_send_str(const char *str)
-{
-	int i = 0;
-	for (i = 0; i < (int) strlen(str); i++) {
-		serial_send_char(SP, *(str + i));
-	}
-}
-#else
 void serial_send_str(uint16_t sba, const char *str)
 {
 	int i = 0;
 	for (i = 0; i < (int) strlen(str); i++) {
 		serial_send_char(sba, *(str + i));
 	}
+}
+
+void serial_send(uint16_t sba, const char *fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	while (*fmt != '\0') {
+		if(*fmt == '%') {
+			switch (*(fmt + 1)) {
+				case 'd':
+					int d = va_arg(args, int);
+					serial_send_char(sba, (char) d);
+					break;
+				case 'f':
+				case 'd':
+					double d = va_arg(args, double);
+					serial_send_char(sba, (char) ((int) d));
+					serial_send_char(sba, '.');
+					serial_send_char(sba, (char) (int) (d*100)/100);
+					break;
+				case 'c':
+					char c = va_arg(args, char);
+					serial_send_char(sba, c);
+					break;
+				case 's':
+					char *s = va_arg(args, char *);
+					serial_send_str(sba, s);
+					break;
+			}
+		} else {
+			serial_send_char(sba, *fmt);
+		}
+				
+	}
+	va_end(args);
 }
 #endif /* SERIAL_DEBUG */
 
