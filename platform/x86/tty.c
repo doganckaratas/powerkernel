@@ -11,12 +11,18 @@
 #include "string.h"
 #include "tty.h"
 
+#ifdef SERIAL_DEBUG
+#define SERIAL_IO 1
+#else
+#define SERIAL_IO 0
+#endif /* SERIAL_DEBUG */
+
 #if 0
 static void write_framebuffer(char** );
 static void clear_page(char** );
 static void putchar_color_coord(char , size_t , size_t );
 static char** select_page(char** , int );
-#endif 
+#endif
 
 // soft buffer kullan ve base address e flush et, böyle çok unstable
 
@@ -38,6 +44,19 @@ void tty_8025_init() // text mode 80x25 init
 	clear_page(page);
 #endif
 }
+
+void tty_version()
+{
+	setcolor(pair(LTRED,BLACK));
+	printf("PowerKernel 0.3\n");
+	setcolor(pair(LTGRAY,BLACK));
+	printf("(c) 2011 - 2018 Dogan Can Karatas.\n");
+	printf("stdin: %s\nstdout:%s\nstderr:%s",
+		SERIAL_IO ? "serial" : "display",
+		SERIAL_IO ? "serial" : "display",
+		SERIAL_IO ? "serial" : "display");
+}
+
 #if 0
 static void write_framebuffer(char** page)
 {

@@ -12,16 +12,6 @@
 #include "io.h"
 #include "serial.h"
 
-#if defined(SERIAL_1)
-#define SP SER1
-#elif defined(SERIAL_2)
-#define SP SER2
-#elif defined(SERIAL_3)
-#define SP SER3
-#elif defined(SERIAL_4)
-#define SP SER4
-#endif
-
 /* Serial Mini-Info Sheet
 0x3F8 = First Serial Port
 0x2F8 = Second Serial Port
@@ -65,6 +55,11 @@ void serial_setup(uint16_t baud)
 	outportb(SP + 3, 0x03); /* 8N1 setup */
 	outportb(SP + 2, 0xC7); /* enable FIFO */
 	outportb(SP + 4, 0x0B); /* IRQ bits set, Rts & dts set. */
+
+	serial_send("stdin: %s\r\nstdout:%s\r\nstderr:%s\r\n",
+		SERIAL_IO ? "serial" : "display",
+		SERIAL_IO ? "serial" : "display",
+		SERIAL_IO ? "serial" : "display");
 }
 
 int serial_send_available()
@@ -83,8 +78,48 @@ void serial_send_str(const char *str)
 {
 	int i = 0;
 	for (i = 0; i < (int) strlen(str); i++) {
-		serial_send_char(SP, *(str + i));
+		serial_send_char(*(str + i));
 	}
+}
+
+void serial_send(const char *fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	int d = 0;
+	int x = 0;
+	char c = '\0';
+	char *s;
+	while (*fmt != '\0') {
+		if(*fmt == '%') {
+			switch (*(fmt + 1)) {
+				case 'd':
+					d = va_arg(args, int);
+					serial_send_str(itoa(d, BASE_10));
+					break;
+				case 'c':
+					c = va_arg(args, char);
+					serial_send_char(c);
+					break;
+				case 's':
+					s = va_arg(args, char *);
+					serial_send_str(s);
+					break;
+				case 'x':
+					x = va_arg(args, int);
+					serial_send_str(itoa(x, BASE_16));
+					break;
+				default:
+					++fmt;
+					break;
+			}
+			++fmt;
+		} else {
+			serial_send_char(*fmt);
+		}
+		++fmt;
+	}
+	va_end(args);
 }
 #else
 void serial_setup(uint16_t sba, uint16_t baud)
@@ -122,33 +157,33 @@ void serial_send(uint16_t sba, const char *fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
+	int d = 0;
+	char c = '\0';
+	char *s;
 	while (*fmt != '\0') {
 		if(*fmt == '%') {
 			switch (*(fmt + 1)) {
 				case 'd':
-					int d = va_arg(args, int);
-					serial_send_char(sba, (char) d);
-					break;
-				case 'f':
-				case 'd':
-					double d = va_arg(args, double);
-					serial_send_char(sba, (char) ((int) d));
-					serial_send_char(sba, '.');
-					serial_send_char(sba, (char) (int) (d*100)/100);
+					d = va_arg(args, int);
+					serial_send_str(sba, itoa(d, BASE_10));
 					break;
 				case 'c':
-					char c = va_arg(args, char);
+					c = va_arg(args, char);
 					serial_send_char(sba, c);
 					break;
 				case 's':
-					char *s = va_arg(args, char *);
+					s = va_arg(args, char *);
 					serial_send_str(sba, s);
 					break;
+				default:
+					++fmt;
+					break;
 			}
+			++fmt;
 		} else {
 			serial_send_char(sba, *fmt);
 		}
-				
+		++fmt;
 	}
 	va_end(args);
 }

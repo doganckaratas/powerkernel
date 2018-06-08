@@ -56,6 +56,7 @@ uint8_t terminal_color;
 uint16_t* base_addr; // video hardware memory port
 
 void tty_8025_init();
+void tty_version();
 void setcolor(uint8_t );
 void printf(char*, ...);
 void putchar(char );
