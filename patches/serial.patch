@@ -1,0 +1,64 @@
+diff --git a/Makefile b/Makefile
+index 7ff07f5..3ad3aa8 100644
+--- a/Makefile
++++ b/Makefile
+@@ -47,7 +47,7 @@ iso: all
+ 	rm -rf ./tmp
+ 
+ boot: iso clean
+-	qemu-system-i386 -m 64M -cdrom $(IMAGE) -monitor stdio 
++	qemu-system-i386 -m 64M -cdrom $(IMAGE) -monitor stdio -serial pty
+ 
+ clean:
+ 	rm -rf $(OBJ)
+diff --git a/src/kernel.c b/src/kernel.c
+index ff825c4..1bc7432 100644
+--- a/src/kernel.c
++++ b/src/kernel.c
+@@ -32,6 +32,18 @@ extern "C"
+ 
+ // ilerde her bir fonksiyona özel c dosyası olmalı, klasörler hiyerarşik olmalı..
+ // bundled c dosyaları gereksiz.
++#define PORT 0x3F8
++
++int is_transmit_empty() {
++   return inportb(PORT + 5) & 0x20;
++}
++ 
++void write_serial(char a) {
++   while (is_transmit_empty() == 0);
++ 
++   outportb(PORT,a);
++}
++
+ 
+ void kernel_main() 
+ {
+@@ -40,6 +52,27 @@ void kernel_main()
+ 	printf("PowerKernel 0.3\n");
+ 	setcolor(pair(LTGRAY,BLACK));
+ 	printf("(c) 2011 - 2017 Dogan Can Karatas.\n\n");
++	outportb(PORT + 1, 0x00);    // Disable all interrupts
++	outportb(PORT + 3, 0x80);    // Enable DLAB (set baud rate divisor)
++	outportb(PORT + 0, 0x03);    // Set divisor to 3 (lo byte) 38400 baud
++	outportb(PORT + 1, 0x00);    //                  (hi byte)
++	outportb(PORT + 3, 0x03);    // 8 bits, no parity, one stop bit
++	outportb(PORT + 2, 0xC7);    // Enable FIFO, clear them, with 14-byte threshold
++	outportb(PORT + 4, 0x0B);    // IRQs enabled, RTS/DSR set
++
++	char j = '0';
++	char text[30] = "\033[30;1mselam 123\033[0m\r\n";
++	while (1) {
++		text[3] = j;
++		for (int i = 0; i < 30; i++) {
++			write_serial(text[i]);
++		}
++		if (j == '7') {
++			j = '0';
++		}
++		j++;
++	}
++
+ 	//setcolor(pair(LTGREEN,BLACK));
+ 	//printf("%c",'>');
+ 	//setcolor(pair(LTGRAY,BLACK));

@@ -1,0 +1,112 @@
+diff --git a/README.md b/README.md
+index c905907..aeef1c5 100644
+--- a/README.md
++++ b/README.md
+@@ -12,3 +12,5 @@ not generic functions should allowed in there
+ src/ folder should contains generic routines, using platform specific API's
+ these codes should be able to run in every supported platform.
+ 
++we need rootfs folder that contain bin/ and boot/ folders, that included in
++*.iso file
+diff --git a/platform/x86/include/tty.h b/platform/x86/include/tty.h
+index 289dcec..78e91ba 100644
+--- a/platform/x86/include/tty.h
++++ b/platform/x86/include/tty.h
+@@ -7,8 +7,7 @@
+ #ifndef __TTY_H__
+ #define __TTY_H__
+ 
+-enum vga_colors
+-{
++enum vga {
+ 	BLACK 		= 0,
+ 	BLUE 		= 1,
+ 	GREEN 		= 2,
+@@ -25,7 +24,18 @@ enum vga_colors
+ 	LTMAGENTA 	= 13,
+ 	LTBROWN 	= 14,
+ 	WHITE 		= 15
+-};	
++};
++
++struct tty {
++	uint16_t	*base;
++	size_t		width;
++	size_t		height;
++	char		**buffer;
++	size_t		row;
++	size_t		column;
++	uint8_t		color;
++};
++
+ 
+ 
+ // [ AAAA BBBB CCCCC DDDD ]  -> framebuffer
+@@ -55,7 +65,7 @@ size_t terminal_column;
+ uint8_t terminal_color;
+ uint16_t* base_addr; // video hardware memory port
+ 
+-void tty_8025_init();
++int tty_8025_init(struct tty*);
+ void setcolor(uint8_t );
+ void printf(char*, ...);
+ void putchar(char );
+diff --git a/platform/x86/tty.c b/platform/x86/tty.c
+index 91f1dfb..71e00d3 100644
+--- a/platform/x86/tty.c
++++ b/platform/x86/tty.c
+@@ -18,19 +18,20 @@ static char** select_page(char** , int );
+ 
+ // soft buffer kullan ve base address e flush et, böyle çok unstable
+ 
+-void tty_8025_init() // text mode 80x25 init
++int tty_8025_init(struct tty *term) // text mode 80x25 init
+ {
+ 	char newbuf[WIDTH][HEIGHT*4];
+-	buffer = (char**) newbuf;
+ 	char** page;
+-	terminal_row = 0;
+-	terminal_column = 0;
+-	terminal_color = pair(WHITE, BLACK);
+-	base_addr = (uint16_t*) 0xB8000;	// video ram base addr
++	term->base = (uint16_t *) 0xB8000; // base addr
++	term->row = 0;
++	term->col = 0;
++	term->buffer = (char**) newbuf;
++	term->color = pair(WHITE, BLACK);
+ //	buffer[16][16] = pair('A', terminal_color);
+ //	page = select_page(buffer, 0);
+ //	write_framebuffer(page);
+ //	clear_page(page);
++	return 0;
+ }
+ 
+ static void write_framebuffer(char** page)
+diff --git a/src/kernel.c b/src/kernel.c
+index ff825c4..ee15d61 100644
+--- a/src/kernel.c
++++ b/src/kernel.c
+@@ -16,11 +16,11 @@
+ #include "tty.h"
+ 
+ #if defined(__linux__)
+-#error "You are using non-cross targeting GCC compiler. There may be some issues."
++#error "Error: Non-cross compiler used. Compiler target: linux"
+ #endif
+  
+ #if !defined(__i386__)
+-#error "GCC is not targeting i386. Please use ix86-elf toolchain."
++#error "Error: your system target is not i386 (x86-32)."
+ #endif
+  
+ #if defined(__cplusplus)
+@@ -35,7 +35,8 @@ extern "C"
+ 
+ void kernel_main() 
+ {
+-	tty_8025_init();
++	struct tty term;
++	tty_8025_init(&term);
+ 	setcolor(pair(LTRED,BLACK));
+ 	printf("PowerKernel 0.3\n");
+ 	setcolor(pair(LTGRAY,BLACK));

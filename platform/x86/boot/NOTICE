@@ -1,0 +1,8 @@
+work in progress
+
+we need custom bootloader that inits kernel and services, for both installation
+and normal runtime operations
+
+i've selected to implement femtokernel (ultra slim ukernel variant), so we rely
+heavily on bootloader performance and reliability, as well as for early system
+initialization jobs
