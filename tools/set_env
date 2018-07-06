@@ -28,7 +28,8 @@ tar xf i686-elf.tar.xz
 cd i686-elf-4.9.1-Linux-x86_64
 mkdir /opt/cross
 cp -R /tmp/i686-elf-4.9.1-Linux-x86_64/* /opt/cross
-echo "export PATH=/opt/cross/bin:$PATH" >> /etc/profile
+echo "PATH=/opt/cross/bin:$PATH" >> ~/.profile
+source ~/.profile
 rm -rf /tmp/i686-elf-4.9.1-Linux-x86_64
 rm /tmp/i686-elf-4.9.1-Linux-x86_64.tar.xz
 rm -rf /i686-elf.tar.xz
