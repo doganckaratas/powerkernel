@@ -7,6 +7,18 @@
 #ifndef __SERIAL_H__
 #define __SERIAL_H__
 
+enum serial_base_addr {
+	ttyS0=0x3F8,
+	ttyS1=0x2F8,
+	ttyS2=0x3E8,
+	ttyS3=0x2E8
+};
+
+struct serial_port {
+	enum serial_base_addr addr;
+	uint16_t baud;
+};
+
 #define SER1 0x3F8
 #define SER2 0x2F8
 #define SER3 0x3E8

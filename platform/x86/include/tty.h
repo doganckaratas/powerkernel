@@ -4,6 +4,8 @@
 ### Doğan Can Karataş -- v0.3
 */
 
+#if 0
+
 #ifndef __TTY_H__
 #define __TTY_H__
 
@@ -63,3 +65,5 @@ void putchar(char );
 void clear(void );
 
 #endif /* __TTY_H__ */
+
+#endif

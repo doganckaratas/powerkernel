@@ -3,7 +3,7 @@
 ### (c) 2011 - 2017 
 ### Doğan Can Karataş -- v0.3
 */
-
+#if 0 /* we want to get rid of multiboot standard after powerloader */
 #ifndef MULTIBOOT_HEADER
 #define MULTIBOOT_HEADER 1
 
@@ -210,3 +210,5 @@ typedef struct multiboot_mod_list multiboot_module_t;
 #endif /* ! ASM_FILE */
 
 #endif /* ! MULTIBOOT_HEADER */
+
+#endif

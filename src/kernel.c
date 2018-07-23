@@ -10,11 +10,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdarg.h>
-#include "types.h"
 #include "serial.h"
 #include "string.h"
 #include "io.h"
-#include "tty.h"
 
 #if defined(__linux__)
 #error "You are using non-cross targeting GCC compiler. There may be some issues."
@@ -36,8 +34,6 @@ extern "C"
 
 void kernel_main()
 {
-	tty_8025_init();
-	tty_version();
 	serial_setup(38400);
 	serial_send("\033[31;1mPowerKernel 0.3.080618r Booting...\033[0m\r\n"
 			"(c) 2011 - 2018 Dogan C. Karatas."

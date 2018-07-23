@@ -3,6 +3,7 @@
 ### (c) 2011 - 2017
 ### Doğan Can Karataş -- v0.3
 */
+#if 0 /* we do not need video teletype for now */
 
 #include <stddef.h>
 #include <stdint.h>
@@ -258,5 +259,7 @@ void printf (const char *format, ...)
         }
     }
 }
+
+#endif
 
 #endif
