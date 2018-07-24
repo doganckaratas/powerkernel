@@ -44,32 +44,35 @@ SBA+6 = .  .  .  .  .  .  .  .   Modem Status Reg
 SBA+7 = .  .  .  .  .  .  .  .   Scratch Reg
 */
 
-#ifdef SERIAL_DEBUG
-void serial_setup(uint16_t baud)
+void serial_setup(enum serial_base_addr sba, uint16_t baud)
 {
-	outportb(SP + 1, 0x00); /* clear all ints */
-	outportb(SP + 3, 0x80); /* enable DLAB */
-	outportb(SP + 0, baud & 0xFF); /* lsb of baud */
-	outportb(SP + 1, (baud >> 8) & 0xFF); /* msb of baud */
-	outportb(SP + 3, 0x03); /* 8N1 setup */
-	outportb(SP + 2, 0xC7); /* enable FIFO */
-	outportb(SP + 4, 0x0B); /* IRQ bits set, Rts & dts set. */
+	tty1.addr = sba;
+	tty1.baud = baud;
+	outportb(tty1.addr + 1, 0x00); /* clear all ints */
+	outportb(tty1.addr + 3, 0x80); /* enable DLAB */
+	outportb(tty1.addr + 0, tty1.baud & 0xFF); /* lsb of baud */
+	outportb(tty1.addr + 1, (tty1.baud >> 8) & 0xFF); /* msb of baud */
+	outportb(tty1.addr + 3, 0x03); /* 8N1 setup */
+	outportb(tty1.addr + 2, 0xC7); /* enable FIFO */
+	outportb(tty1.addr + 4, 0x0B); /* IRQ bits set, Rts & dts set. */
 
+#if 0
 	serial_send("stdin: %s\r\nstdout:%s\r\nstderr:%s\r\n",
 		SERIAL_IO ? "serial" : "display",
 		SERIAL_IO ? "serial" : "display",
 		SERIAL_IO ? "serial" : "display");
+#endif
 }
 
 int serial_send_available()
 {
-	return inportb(SP + 5) & 0x20;
+	return inportb(tty1.addr + 5) & 0x20;
 }
 
 void serial_send_char(const char c)
 {
 	if (serial_send_available()) {
-		outportb(SP, c);
+		outportb(tty1.addr, c);
 	}
 }
 
@@ -120,71 +123,25 @@ void serial_send(const char *fmt, ...)
 	}
 	va_end(args);
 }
-#else
-void serial_setup(uint16_t sba, uint16_t baud)
+
+#if 0
+void serial_recv_available()
 {
-	outportb(sba + 1, 0x00); /* clear all ints */
-	outportb(sba + 3, 0x80); /* enable DLAB */
-	outportb(sba + 0, baud & 0xFF); /* lsb of baud */
-	outportb(sba + 1, (baud >> 8) & 0xFF); /* msb of baud */
-	outportb(sba + 3, 0x03); /* 8N1 setup */
-	outportb(sba + 2, 0xC7); /* enable FIFO */
-	outportb(sba + 4, 0x0B); /* IRQ bits set, Rts & dts set. */
+
 }
 
-int serial_send_available(uint16_t sba)
+void serial_recv_char()
 {
-	return inportb(sba + 5) & 0x20;
+
 }
 
-void serial_send_char(uint16_t sba, const char c)
+void serial_recv_str()
 {
-	if (serial_send_available(sba)) {
-		outportb(sba, c);
-	}
+
 }
 
-void serial_send_str(uint16_t sba, const char *str)
+void serial_recv()
 {
-	int i = 0;
-	for (i = 0; i < (int) strlen(str); i++) {
-		serial_send_char(sba, *(str + i));
-	}
-}
 
-void serial_send(uint16_t sba, const char *fmt, ...)
-{
-	va_list args;
-	va_start(args, fmt);
-	int d = 0;
-	char c = '\0';
-	char *s;
-	while (*fmt != '\0') {
-		if(*fmt == '%') {
-			switch (*(fmt + 1)) {
-				case 'd':
-					d = va_arg(args, int);
-					serial_send_str(sba, itoa(d, BASE_10));
-					break;
-				case 'c':
-					c = va_arg(args, char);
-					serial_send_char(sba, c);
-					break;
-				case 's':
-					s = va_arg(args, char *);
-					serial_send_str(sba, s);
-					break;
-				default:
-					++fmt;
-					break;
-			}
-			++fmt;
-		} else {
-			serial_send_char(sba, *fmt);
-		}
-		++fmt;
-	}
-	va_end(args);
 }
-#endif /* SERIAL_DEBUG */
-
+#endif

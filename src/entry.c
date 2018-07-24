@@ -34,7 +34,7 @@ extern "C"
 
 void kernel_main()
 {
-	serial_setup(38400);
+	serial_setup(ttyS0, 38400);
 	serial_send("\033[31;1mPowerKernel 0.3.080618r Booting...\033[0m\r\n"
 			"(c) 2011 - 2018 Dogan C. Karatas."
 			" All Rights Reserved.\r\n");
