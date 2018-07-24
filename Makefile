@@ -16,11 +16,11 @@ AFLAGS	= -felf
 # if platform == x86
 ASRC	= ./platform/x86/boot/bootloader.asm
 # else ...
-CSRC	= ./src/$(TARGET).c
+CSRC	= ./src/entry.c
 # If platform == x86
 CSRC	+= $(wildcard ./platform/x86/*.c)
 # else ...
-LDSRC	= ./src/linker.ld 
+LDSRC	= ./platform/x86/x86-32.ld 
 OBJ	= $(shell find './' -name '*.o')
 IMAGE	= powerkernel.iso
 
