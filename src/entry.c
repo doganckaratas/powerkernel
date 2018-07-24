@@ -35,10 +35,9 @@ extern "C"
 void kernel_main()
 {
 	serial_setup(ttyS0, 38400);
-	serial_send("\033[31;1mPowerKernel 0.3.080618r Booting...\033[0m\r\n"
+	serial_send(LRED"PowerKernel 0.3.240718"NORM"\r\n"
 			"(c) 2011 - 2018 Dogan C. Karatas."
 			" All Rights Reserved.\r\n");
-	serial_send("\033[33;1mYELLOW TEXT\033[0m\r\n");
 	asm ("mov eax, 48" : : );
 	asm ("mov ebx, 23" : : );
 	dump_regs();

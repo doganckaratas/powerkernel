@@ -48,7 +48,9 @@ iso: all
 	rm -rf ./tmp
 
 boot: iso clean
-	@echo "qemu-system-i386 -m 64M -cdrom $(IMAGE) -serial mon:stdio \n\n\nBoot Emulation Starting..."
+	@echo "qemu-system-i386 -m 64M -cdrom $(IMAGE) -serial mon:stdio"
+	@echo "Boot Emulation Starting..."
+	@echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 	@qemu-system-i386 -m 64M -cdrom $(IMAGE) -serial mon:stdio
 
 clean:
