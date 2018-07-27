@@ -35,8 +35,10 @@ enum serial_base_addr {
 struct serial_port {
 	enum serial_base_addr addr;
 	uint16_t baud;
-} tty1;
+} tty1; /* there is only 1 tty device atm */
 
+
+inline char* serial_addr_to_name(enum serial_base_addr sba);
 void serial_setup(enum serial_base_addr, uint16_t);
 int serial_send_available();
 void serial_send_str(const char *);

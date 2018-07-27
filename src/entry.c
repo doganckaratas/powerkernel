@@ -29,8 +29,8 @@ extern "C"
 // FS KURDUKTAN SONRA FAT32 YADA BAŞKA BİR FS HEADER'INI EZMEDEN BOOTLOADER KAS.
 // memory allocator şart
 
-// ilerde her bir fonksiyona özel c dosyası olmalı, klasörler hiyerarşik olmalı..
-// bundled c dosyaları gereksiz.
+// ilerde her bir fonksiyona özel c dosyasi olmali, klasorler hiyerarsik olmali..
+// bundled c dosyalari gereksiz.
 
 void kernel_main()
 {
@@ -43,4 +43,4 @@ void kernel_main()
 	dump_regs();
 }
 
-// kernel tüm işlemleri yaptıktan somra frontend e handoff yapmalı
+// kernel tum islemleri yaptiktan somra frontend e handoff yapmali

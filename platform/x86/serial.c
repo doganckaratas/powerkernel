@@ -44,6 +44,17 @@ SBA+6 = .  .  .  .  .  .  .  .   Modem Status Reg
 SBA+7 = .  .  .  .  .  .  .  .   Scratch Reg
 */
 
+inline char* serial_addr_to_name(enum serial_base_addr sba)
+{
+	switch (sba) {
+		case ttyS0: return "ttyS0"; break;
+		case ttyS1: return "ttyS1"; break;
+		case ttyS2: return "ttyS2"; break;
+		case ttyS3: return "ttyS3"; break;
+		default: return ""; break;
+	}
+}
+
 void serial_setup(enum serial_base_addr sba, uint16_t baud)
 {
 	tty1.addr = sba;
@@ -55,13 +66,7 @@ void serial_setup(enum serial_base_addr sba, uint16_t baud)
 	outportb(tty1.addr + 3, 0x03); /* 8N1 setup */
 	outportb(tty1.addr + 2, 0xC7); /* enable FIFO */
 	outportb(tty1.addr + 4, 0x0B); /* IRQ bits set, Rts & dts set. */
-
-#if 0
-	serial_send("stdin: %s\r\nstdout:%s\r\nstderr:%s\r\n",
-		SERIAL_IO ? "serial" : "display",
-		SERIAL_IO ? "serial" : "display",
-		SERIAL_IO ? "serial" : "display");
-#endif
+	serial_send("terminal: tty1\ndevice: %s (0x%x)\n", serial_addr_to_name(sba), sba);
 }
 
 int serial_send_available()
@@ -124,7 +129,7 @@ void serial_send(const char *fmt, ...)
 	va_end(args);
 }
 
-#if 0
+#if 0 /* to be implemented */
 void serial_recv_available()
 {
 
