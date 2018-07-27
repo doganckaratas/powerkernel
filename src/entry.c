@@ -1,7 +1,8 @@
-/*
- * PowerKernel
- * (c) 2011 - 2017
- * Doğan Can Karataş -- v0.4
+/**
+ * @file   src/entry.c
+ * @brief  entry point of kernel
+ * @date   28/07/2018
+ * @author Doğan Can Karataş
  */
 
 #if !defined(__cplusplus)
@@ -33,6 +34,11 @@ extern "C"
 
 void test_serial();
 
+/**
+ * @fn         void kernel_main()
+ * @brief      main function of kernel
+ * @return     halts cpu on return
+ */
 void kernel_main()
 {
 	serial_setup(ttyS0, 38400);
