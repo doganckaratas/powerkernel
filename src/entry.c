@@ -32,15 +32,40 @@ extern "C"
 // ilerde her bir fonksiyona özel c dosyasi olmali, klasorler hiyerarsik olmali..
 // bundled c dosyalari gereksiz.
 
+void test_serial();
+
 void kernel_main()
 {
 	serial_setup(ttyS0, 38400);
 	serial_send(LRED"PowerKernel 0.3.240718"NORM"\r\n"
 			"(c) 2011 - 2018 Dogan C. Karatas."
 			" All Rights Reserved.\r\n");
-	asm ("mov eax, 48" : : );
-	asm ("mov ebx, 23" : : );
-	dump_regs();
+	test_serial();
 }
+
+void test_serial()
+{
+	/* test for serial recv */
+	char k = 0;
+	int i = 0;
+	char *str;
+	/* due to not having memory allocator, fixed addr used for str. */
+	str = (char* ) 0x00010;
+	memset(str, 0, 32);
+	while (1) {
+		serial_recv_char(&k);
+		if (k == 13) {
+			break;
+		}
+		if (k < 32 || k > 122) {
+			continue;
+		}
+		*(str + i) = k;
+		i++;
+		k = 0;
+	}
+	serial_send("Received: %s\r\n", str);
+}
+
 
 // kernel tum islemleri yaptiktan somra frontend e handoff yapmali

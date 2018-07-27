@@ -44,7 +44,7 @@ SBA+6 = .  .  .  .  .  .  .  .   Modem Status Reg
 SBA+7 = .  .  .  .  .  .  .  .   Scratch Reg
 */
 
-inline char* serial_addr_to_name(enum serial_base_addr sba)
+char* serial_addr_to_name(enum serial_base_addr sba)
 {
 	switch (sba) {
 		case ttyS0: return "ttyS0"; break;
@@ -105,8 +105,8 @@ void serial_send(const char *fmt, ...)
 					serial_send_str(itoa(d, BASE_10));
 					break;
 				case 'c':
-					c = va_arg(args, char);
-					serial_send_char(c);
+					c = va_arg(args, int);
+					serial_send_char((char) c);
 					break;
 				case 's':
 					s = va_arg(args, char *);
@@ -129,17 +129,20 @@ void serial_send(const char *fmt, ...)
 	va_end(args);
 }
 
+int serial_recv_available()
+{
+	return inportb(tty1.addr + 5) & 0x01;
+}
+
+void serial_recv_char(char *c)
+{
+	//while (serial_recv_available() == 0);
+	if (serial_recv_available()) {
+		*c = (char) inportb(tty1.addr);
+	}
+}
+
 #if 0 /* to be implemented */
-void serial_recv_available()
-{
-
-}
-
-void serial_recv_char()
-{
-
-}
-
 void serial_recv_str()
 {
 

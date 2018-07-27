@@ -21,7 +21,8 @@ align 4
 section .bootstrap_stack, nobits
 align 4
 stack_bottom:
-resb 16384
+;resb 16384 ;16 kb stack
+resb 32768  ;32 kb stack
 stack_top:
 
 section .text

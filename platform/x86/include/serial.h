@@ -7,6 +7,7 @@
 #ifndef __SERIAL_H__
 #define __SERIAL_H__
 
+/* 16 Bit color escape strings for serial terminal */
 #define	NORM	"\033[0m"
 #define	BLACK	"\033[30m"
 #define	RED	"\033[31m"
@@ -30,7 +31,7 @@ enum serial_base_addr {
 	ttyS1=0x2F8,
 	ttyS2=0x3E8,
 	ttyS3=0x2E8
-};
+}; /* default serial port base addresses */
 
 struct serial_port {
 	enum serial_base_addr addr;
@@ -38,11 +39,15 @@ struct serial_port {
 } tty1; /* there is only 1 tty device atm */
 
 
-inline char* serial_addr_to_name(enum serial_base_addr sba);
+char* serial_addr_to_name(enum serial_base_addr);
+
 void serial_setup(enum serial_base_addr, uint16_t);
 int serial_send_available();
-void serial_send_str(const char *);
 void serial_send_char(const char);
+void serial_send_str(const char *);
 void serial_send(const char *fmt, ...);
+
+int serial_recv_available();
+void serial_recv_char(char*);
 
 #endif /* __SERIAL_H__ */
