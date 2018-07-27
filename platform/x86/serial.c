@@ -1,8 +1,9 @@
-/*
-### PowerKernel
-### (c) 2011 - 2017
-### Doğan Can Karataş -- v0.3
-*/
+/**
+ * @file   x86/serial.c
+ * @brief  x86 platform serial functions
+ * @date   28/07/2018
+ * @author Doğan Can Karataş
+ */
 
 #include <stddef.h>
 #include <stdint.h>
@@ -44,7 +45,13 @@ SBA+6 = .  .  .  .  .  .  .  .   Modem Status Reg
 SBA+7 = .  .  .  .  .  .  .  .   Scratch Reg
 */
 
-char* serial_addr_to_name(enum serial_base_addr sba)
+/**
+ * @fn         char* serial_addr_to_name(enum serial_base_address sba)
+ * @brief      converts given serial base address to string
+ * @param[in]  sba base address of serial port
+ * @return     string representation of given port base address
+ */
+char* serial_addr_to_string(enum serial_base_addr sba)
 {
 	switch (sba) {
 		case ttyS0: return "ttyS0"; break;
@@ -55,32 +62,57 @@ char* serial_addr_to_name(enum serial_base_addr sba)
 	}
 }
 
+/**
+ * @fn         void serial_setup(enum serial_base_address sba, uint16_t baud)
+ * @brief      serial port initialization function at given baud rate
+ * @param[in]  sba base address of serial port
+ * @param[in]  baud desired baud rate of serial port
+ * @return     void
+ */
 void serial_setup(enum serial_base_addr sba, uint16_t baud)
 {
 	tty1.addr = sba;
 	tty1.baud = baud;
-	outportb(tty1.addr + 1, 0x00); /* clear all ints */
-	outportb(tty1.addr + 3, 0x80); /* enable DLAB */
-	outportb(tty1.addr + 0, tty1.baud & 0xFF); /* lsb of baud */
-	outportb(tty1.addr + 1, (tty1.baud >> 8) & 0xFF); /* msb of baud */
-	outportb(tty1.addr + 3, 0x03); /* 8N1 setup */
-	outportb(tty1.addr + 2, 0xC7); /* enable FIFO */
-	outportb(tty1.addr + 4, 0x0B); /* IRQ bits set, Rts & dts set. */
-	serial_send("terminal: tty1\ndevice: %s (0x%x)\n", serial_addr_to_name(sba), sba);
+	out_byte(tty1.addr + 1, 0x00); /* clear all ints */
+	out_byte(tty1.addr + 3, 0x80); /* enable DLAB */
+	out_byte(tty1.addr + 0, tty1.baud & 0xFF); /* lsb of baud */
+	out_byte(tty1.addr + 1, (tty1.baud >> 8) & 0xFF); /* msb of baud */
+	out_byte(tty1.addr + 3, 0x03); /* 8N1 setup */
+	out_byte(tty1.addr + 2, 0xC7); /* enable FIFO */
+	out_byte(tty1.addr + 4, 0x0B); /* IRQ bits set, Rts & dts set. */
+	serial_send("terminal: tty1\ndevice: %s (0x%x)\n",
+			serial_addr_to_string(sba), sba);
 }
 
+/**
+ * @fn         int serial_available()
+ * @brief      serial port availability check for sending data
+ * @return     0 if not available, 1 if available to send data
+ */
 int serial_send_available()
 {
-	return inportb(tty1.addr + 5) & 0x20;
+	return in_byte(tty1.addr + 5) & 0x20;
 }
 
+/**
+ * @fn         void serial_send_char(const char c)
+ * @brief      function for sending 1 char to serial port
+ * @param[in]  c char to send
+ * @return     void
+ */
 void serial_send_char(const char c)
 {
 	if (serial_send_available()) {
-		outportb(tty1.addr, c);
+		out_byte(tty1.addr, c);
 	}
 }
 
+/**
+ * @fn         void serial_send_str(const char *str)
+ * @brief      function for sending zero terminated string to serial port
+ * @param[in]  str string to send
+ * @return     void
+ */
 void serial_send_str(const char *str)
 {
 	int i = 0;
@@ -89,6 +121,13 @@ void serial_send_str(const char *str)
 	}
 }
 
+/**
+ * @fn         void serial_send(const char *fmt, ...)
+ * @brief      function for sending formatted data to serial port
+ * @param[in]  fmt format string for variadic arguments
+ * @param[in]  va_args variadic arguments according to format string
+ * @return     void
+ */
 void serial_send(const char *fmt, ...)
 {
 	va_list args;
@@ -129,16 +168,27 @@ void serial_send(const char *fmt, ...)
 	va_end(args);
 }
 
+/**
+ * @fn         int serial_recv_available()
+ * @brief      serial port availability check for receiving data
+ * @return     0 if not available, 1 if available to send data
+ */
 int serial_recv_available()
 {
-	return inportb(tty1.addr + 5) & 0x01;
+	return in_byte(tty1.addr + 5) & 0x01;
 }
 
+/**
+ * @fn         void serial_recv_char(char *c)
+ * @brief      function for receiving 1 char from serial port
+ * @param[out] c received char
+ * @return     void
+ */
 void serial_recv_char(char *c)
 {
 	//while (serial_recv_available() == 0);
 	if (serial_recv_available()) {
-		*c = (char) inportb(tty1.addr);
+		*c = (char) in_byte(tty1.addr);
 	}
 }
 

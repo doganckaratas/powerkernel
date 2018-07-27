@@ -1,8 +1,8 @@
 /*
-### PowerKernel
-### (c) 2011 - 2017
-### Doğan Can Karataş -- v0.3
-*/
+ * PowerKernel
+ * (c) 2011 - 2017
+ * Doğan Can Karataş -- v0.4
+ */
 
 #if !defined(__cplusplus)
 #include <stdbool.h>
@@ -12,7 +12,6 @@
 #include <stdarg.h>
 #include "serial.h"
 #include "string.h"
-#include "io.h"
 
 #if defined(__linux__)
 #error "You are using non-cross targeting GCC compiler. There may be some issues."

@@ -1,57 +1,45 @@
-/*
-### PowerKernel 
-### (c) 2011 - 2017 
-### Doğan Can Karataş -- v0.3
-*/
+/**
+ * @file   x86/io.c
+ * @brief  x86 platform IO functions
+ * @date   28/07/2018
+ * @author Doğan Can Karataş
+ */
 
 #include <stddef.h>
 #include <stdint.h>
 #include "io.h"
 #include "serial.h"
 
-void memset(void *dest, int data, size_t size) 
-{
-	char* dst=(char*) dest;
-	for(;size;size--,dst++)
-		*dst=data;
-}
-
-void memcpy(void *dest, void *src, size_t size)
-{
-   char *dst=dest;
-   for (;size;size--,dest++,src++)
-        *dst=*((char*)src);
-}
-
-int memcmp(void *dest, void *source, size_t size)
-{
-	char *dst = dest, *src = source;
-	for(size_t i = 0; i < size; i++)
-	{
-		if(dst[i] == src[i])
-		{
-			continue;
-		}
-		else
-		{
-			return -1;
-		}
-	}
-	return 0;
-}
-
-unsigned char inportb(unsigned int port)
+/**
+ * @fn         unsigned char in_byte(unsigned int port)
+ * @brief      receives 1 byte from specified port.
+ * @param[in]  port address for receiving data
+ * @return     data that received from port
+ */
+unsigned char in_byte(unsigned int port)
 {
    unsigned char ret;
    asm volatile ("inb al, dx":"=a" (ret):"d" (port));
    return ret;
 }
 
-void outportb(unsigned int port,unsigned char value)
+/**
+ * @fn         unsigned char out_byte(unsigned int port, unsigned char value)
+ * @brief      sends 1 byte to specified port.
+ * @param[in]  port address for sending data
+ * @param[in]  value data that will be sent through port
+ * @return     void
+ */
+void out_byte(unsigned int port,unsigned char value)
 {
    asm volatile ("outb dx, al": :"d" (port), "a" (value));
 }
 
+/**
+ * @fn         void dump_regs(void)
+ * @brief      dumps register information
+ * @return     void
+ */
 void dump_regs(void)
 {
 	struct Register regs;

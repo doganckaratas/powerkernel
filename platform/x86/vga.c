@@ -1,8 +1,9 @@
-/*
-### PowerKernel
-### (c) 2011 - 2017
-### Doğan Can Karataş -- v0.3
-*/
+/**
+ * @file   x86/vga.c
+ * @brief  x86 platform basic vga driver functions
+ * @date   28/07/2018
+ * @author Doğan Can Karataş
+ */
 #if 0 /* we do not need video teletype for now */
 
 #include <stddef.h>

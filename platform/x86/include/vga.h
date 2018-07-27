@@ -1,8 +1,9 @@
-/*
-### PowerKernel 
-### (c) 2011 - 2017 
-### Doğan Can Karataş -- v0.3
-*/
+/**
+ * @file   x86/include/vga.h
+ * @brief  x86 platform basic vga driver definitions
+ * @date   28/07/2018
+ * @author Doğan Can Karataş
+ */
 
 #if 0
 

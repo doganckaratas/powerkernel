@@ -1,13 +1,16 @@
-/*
-### PowerKernel
-### (c) 2011 - 2017
-### Doğan Can Karataş -- v0.3
-*/
+/**
+ * @file   x86/include/serial.h
+ * @brief  x86 platform serial definitions
+ * @date   28/07/2018
+ * @author Doğan Can Karataş
+ */
 
 #ifndef __SERIAL_H__
 #define __SERIAL_H__
 
-/* 16 Bit color escape strings for serial terminal */
+/**
+ * @brief 16 Bit color escape strings for serial terminal 
+ */
 #define	NORM	"\033[0m"
 #define	BLACK	"\033[30m"
 #define	RED	"\033[31m"
@@ -26,27 +29,31 @@
 #define	LCYAN	"\033[36;1m"
 #define	WHITE	"\033[37;1m"
 
+/**
+ * @brief base addresses for default serial ports
+ */
 enum serial_base_addr {
 	ttyS0=0x3F8,
 	ttyS1=0x2F8,
 	ttyS2=0x3E8,
 	ttyS3=0x2E8
-}; /* default serial port base addresses */
+};
 
+/**
+ * @brief there is only 1 tty device atm
+ */
 struct serial_port {
 	enum serial_base_addr addr;
 	uint16_t baud;
-} tty1; /* there is only 1 tty device atm */
+} tty1;
 
 
-char* serial_addr_to_name(enum serial_base_addr);
-
+char* serial_addr_to_string(enum serial_base_addr);
 void serial_setup(enum serial_base_addr, uint16_t);
 int serial_send_available();
 void serial_send_char(const char);
 void serial_send_str(const char *);
 void serial_send(const char *fmt, ...);
-
 int serial_recv_available();
 void serial_recv_char(char*);
 

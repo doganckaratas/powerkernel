@@ -1,20 +1,19 @@
-/*
-### PowerKernel 
-### (c) 2011 - 2017 
-### Doğan Can Karataş -- v0.3
-*/
-
-//  typedef string yap
+/**
+ * @file   x86/include/io.h
+ * @brief  x86 platform IO definitions
+ * @date   28/07/2018
+ * @author Doğan Can Karataş
+ */
 
 #ifndef __IO_H__
 #define __IO_H__
 
-void memset(void*, int, size_t);
-void memcpy(void *, void *, size_t );
-int memcmp(void *, void *, size_t );
-unsigned char inportb(unsigned int );
-void outportb(unsigned int ,unsigned char );
+unsigned char in_byte(unsigned int );
+void out_byte(unsigned int ,unsigned char );
 
+/**
+ * @brief register structure for x86
+ */
 struct Register {
 	int eax;
 	int ebx;
@@ -29,4 +28,4 @@ struct Register {
 };
 
 void dump_regs(void);
-#endif
+#endif /* __IO_H__ */

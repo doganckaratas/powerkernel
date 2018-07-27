@@ -7,16 +7,18 @@
 TARGET	= kernel
 AS	= nasm
 CC	= i686-elf-gcc
+# generic flags
+CFLAGS += -I./src/include
 # if platform == x86
-CFLAGS	= -I./platform/x86/include -std=gnu99 -ffreestanding -O2 -Wall -Wextra -fstrength-reduce -fomit-frame-pointer -Wno-uninitialized -masm=intel
-CFLAGS += -DSERIAL_DEBUG -DSERIAL_1 #debug related
+CFLAGS += -I./platform/x86/include -std=gnu99 -ffreestanding -O2 -Wall -Wextra -fstrength-reduce -fomit-frame-pointer -Wno-uninitialized -masm=intel
 # else ..
 LDFLAGS	= -ffreestanding -O2 -nostdlib -m32
 AFLAGS	= -felf
 # if platform == x86
 ASRC	= ./platform/x86/boot/bootloader.asm
 # else ...
-CSRC	= ./src/entry.c
+# generic source files
+CSRC	+= $(wildcard ./src/*.c)
 # If platform == x86
 CSRC	+= $(wildcard ./platform/x86/*.c)
 # else ...
