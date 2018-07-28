@@ -15,11 +15,11 @@
 #include "string.h"
 
 #if defined(__linux__)
-#error "You are using non-cross targeting GCC compiler. There may be some issues."
+#error "Error: Non-cross compiler used. Compiler target: linux"
 #endif
 
 #if !defined(__i386__)
-#error "GCC is not targeting i386. Please use ix86-elf toolchain."
+#error "Error: your system target is not i386 (x86-32)"
 #endif
 
 #if defined(__cplusplus)
