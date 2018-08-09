@@ -8,8 +8,11 @@
 #ifndef __IO_H__
 #define __IO_H__
 
-unsigned char in_byte(unsigned int );
-void out_byte(unsigned int ,unsigned char );
+uint8_t in_byte(unsigned int);
+uint16_t in_word(unsigned int);
+void out_byte(unsigned int, uint8_t);
+void out_word(unsigned int, uint16_t);
+void dump_regs(void);
 
 /**
  * @brief register structure for x86
@@ -27,5 +30,4 @@ struct Register {
 	int efl;
 };
 
-void dump_regs(void);
 #endif /* __IO_H__ */

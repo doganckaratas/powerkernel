@@ -11,28 +11,53 @@
 #include "serial.h"
 
 /**
- * @fn         unsigned char in_byte(unsigned int port)
+ * @fn         uint8_t in_byte(unsigned int port)
  * @brief      receives 1 byte from specified port.
  * @param[in]  port address for receiving data
  * @return     data that received from port
  */
-unsigned char in_byte(unsigned int port)
+uint8_t in_byte(unsigned int port)
 {
-   unsigned char ret;
+   uint8_t ret;
    asm volatile ("inb al, dx":"=a" (ret):"d" (port));
    return ret;
 }
 
 /**
- * @fn         unsigned char out_byte(unsigned int port, unsigned char value)
+ * @fn         uint16_t in_word(unsigned int port)
+ * @brief      receives 2 byte from specified port.
+ * @param[in]  port address for receiving data
+ * @return     data that received from port
+ */
+uint16_t in_word(unsigned int port)
+{
+   uint16_t ret;
+   asm volatile ("inw ax, dx":"=a" (ret):"d" (port));
+   return ret;
+}
+
+/**
+ * @fn         void out_byte(unsigned int port, uint8_t value)
  * @brief      sends 1 byte to specified port.
  * @param[in]  port address for sending data
  * @param[in]  value data that will be sent through port
  * @return     void
  */
-void out_byte(unsigned int port,unsigned char value)
+void out_byte(unsigned int port, uint8_t value)
 {
    asm volatile ("outb dx, al": :"d" (port), "a" (value));
+}
+
+/**
+ * @fn         void out_word(unsigned int port, uint16_t value)
+ * @brief      sends 2 byte to specified port.
+ * @param[in]  port address for sending data
+ * @param[in]  value data that will be sent through port
+ * @return     void
+ */
+void out_word(unsigned int port, uint16_t value)
+{
+   asm volatile ("outw dx, ax": :"d" (port), "a" (value));
 }
 
 /**

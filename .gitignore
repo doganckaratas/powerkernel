@@ -1,3 +1,9 @@
+# CScope database
+cscope.out
+
+# Vi caches
+*.swp
+
 # Prerequisites
 *.d
 
