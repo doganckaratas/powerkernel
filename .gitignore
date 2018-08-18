@@ -1,6 +1,9 @@
 # CScope database
 cscope.out
 
+# OS X specific
+.DS_Store
+
 # Vi caches
 *.swp
 
