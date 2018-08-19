@@ -8,6 +8,8 @@
 #ifndef __IO_H__
 #define __IO_H__
 
+#include <stdint.h>
+
 uint8_t in_byte(unsigned int);
 uint16_t in_word(unsigned int);
 void out_byte(unsigned int, uint8_t);

@@ -8,6 +8,8 @@
 #ifndef __SERIAL_H__
 #define __SERIAL_H__
 
+#include <stdint.h>
+
 /**
  * @brief 16 Bit color escape strings for serial terminal 
  */

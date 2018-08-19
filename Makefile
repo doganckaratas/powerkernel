@@ -5,42 +5,36 @@
 
 # Tools and Definitions
 TARGET	= kernel
-AS	= nasm
 CC	= i686-elf-gcc
+MAKE	= make
 # generic flags
-CFLAGS += -I./src/include
+CFLAGS += -I./src/include -g ggdb -O0
 # if platform == x86
-CFLAGS += -I./platform/x86/include -std=gnu99 -ffreestanding -O2 -Wall -Wextra -fstrength-reduce -fomit-frame-pointer -Wno-uninitialized -masm=intel
+CFLAGS += -I./platform/x86/include
 # else ..
 LDFLAGS	= -ffreestanding -O2 -nostdlib -m32
-AFLAGS	= -felf
-# if platform == x86
-ASRC	= ./platform/x86/boot/bootloader.asm
-# else ...
 # generic source files
-CSRC	+= $(wildcard ./src/*.c)
 # If platform == x86
-CSRC	+= $(wildcard ./platform/x86/*.c)
+OBJ	+= $(shell find './' -name '*.o')
 # else ...
-LDSRC	= ./platform/x86/x86-32.ld 
-OBJ	= $(shell find './' -name '*.o')
+LD	= ./platform/x86/x86-32.ld 
 IMAGE	= powerkernel.iso
 
 # Build Rules
 
-.PHONY: clean reset iso boot
-
+.PHONY: all
 all: link
-	
-assemble: $(ASRC)
-	$(AS) $(AFLAGS) $(ASRC)
 
-compile: $(CSRC)
-	$(CC) -c $(CSRC) $(DEPS) $(CFLAGS)
-	
-link: assemble compile
-	$(CC) -T $(LDSRC) -o ./bin/$(TARGET).bin $(LDFLAGS) $(OBJ)
+.PHONY: compile
+compile:
+	$(MAKE) -C platform/x86 all
+	$(MAKE) -C src all
 
+.PHONY: link
+link: compile
+	$(CC) -T $(LD) -o ./bin/$(TARGET).bin $(LDFLAGS) $(OBJ)
+
+.PHONY: iso
 iso: all
 	mkdir ./tmp
 	mkdir ./tmp/boot
@@ -49,15 +43,20 @@ iso: all
 	grub-mkrescue -o $(IMAGE) tmp
 	rm -rf ./tmp
 
+.PHONY: boot
 boot: iso clean
 	@echo "qemu-system-i386 -m 64M -cdrom $(IMAGE) -serial mon:stdio"
 	@echo "Boot Emulation Starting..."
 	@echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 	@qemu-system-i386 -m 64M -cdrom $(IMAGE) -serial mon:stdio
 
+.PHONY: clean
 clean:
-	rm -rf $(OBJ)
-	
+	$(MAKE) -C src clean
+	$(MAKE) -C platform/x86 clean
+	find . -name '*.gch' -delete
+
+.PHONY: reset
 reset: clean
 	rm -rf $(IMAGE) ./bin/$(TARGET).bin ./boot/$(TARGET).bin
 

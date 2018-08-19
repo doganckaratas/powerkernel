@@ -8,6 +8,8 @@
 #ifndef __STRING_H__
 #define __STRING_H__
 
+#include <stddef.h>
+
 /**
  * @brief number base (radix) definitions for integer parsing
  */
