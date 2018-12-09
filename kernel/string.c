@@ -17,11 +17,11 @@
  * @param[in]  size fill length
  * @return     void
  */
-void memset(void *dest, int data, size_t size) 
+void memset(void *dest, int data, size_t size)
 {
-	char* dst=(char*) dest;
-	for(;size;size--,dst++)
-		*dst=data;
+	char* dst = (char*) dest;
+	for ( ; size ; size--, dst++)
+		*dst = data;
 }
 
 /**
@@ -34,9 +34,9 @@ void memset(void *dest, int data, size_t size)
  */
 void memcpy(void *dst, void *src, size_t size)
 {
-   char *buf=dst;
-   for (;size;size--,dst++,src++)
-        *buf=*((char*)src);
+	for ( ; size ; size--, ((uint8_t *) dst)++, ((uint8_t *) src)++) {
+		*((uint8_t *) dst) = *((uint8_t *) src);
+	}
 }
 
 /**
@@ -70,7 +70,7 @@ int memcmp(void *dst, void *src, size_t size)
  * @param[in]  str buffer
  * @return     size of buffer
  */
-size_t strlen(const char* str) 
+size_t strlen(const char* str)
 {
 	size_t ret = 0;
 	while ( str[ret] != 0 )
@@ -91,7 +91,7 @@ void strcpy(char* dst, char* src)
 	{
 		dst[i] = '\0';
 	}
-	
+
 	for(int i = 0; i < (int)strlen(src); i++)
 	{
 		dst[i] = src[i];
@@ -128,7 +128,7 @@ int strseek(char* str, char delimiter)
 
 void strtok(string str, string *dest, char delimiter) // delimiter karakter ile string ayırma
 {
-	int count = strseek(str,delimiter);	
+	int count = strseek(str,delimiter);
 	string buffer[count + 1];
 	int current = 0;
 	for(int i = 0; i < (int) strlen(str); i++)
@@ -143,9 +143,8 @@ void strtok(string str, string *dest, char delimiter) // delimiter karakter ile 
 		}
 	}
 	for(int i = 0; i < count + 1; i++)
-	{	
+	{
 		dest[i] = buffer[i];
-		
 	}
 }
 */
@@ -162,9 +161,9 @@ char* itoa(int val, int base) // val == 0 workaround'u acil degismeli.
 	if (val == 0) // quick workaround FIXME
 		return "0";
 	static char buf[32] = {0};
-	
+
 	int i = 30;
-	
+
 	for(; val && i ; --i, val /= base)
 		buf[i] = "0123456789abcdef"[val % base];
 	return (char* ) &buf[i+1];

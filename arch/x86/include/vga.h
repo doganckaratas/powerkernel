@@ -28,7 +28,7 @@ enum vga_colors
 	LTMAGENTA 	= 13,
 	LTBROWN 	= 14,
 	WHITE 		= 15
-};	
+};
 
 
 // [ AAAA BBBB CCCCC DDDD ]  -> framebuffer

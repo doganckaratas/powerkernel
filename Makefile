@@ -5,19 +5,18 @@
 
 # Tools and Definitions
 TARGET	= kernel
+ARCH	= x86
 CC	= i686-elf-gcc
 MAKE	= make
 # generic flags
-CFLAGS += -I./src/include -g ggdb -O0
-# if platform == x86
-CFLAGS += -I./platform/x86/include
-# else ..
+CFLAGS += -I./kernel/include -g ggdb -O0
+CFLAGS += -I./arch/$(ARCH)/include
 LDFLAGS	= -ffreestanding -O2 -nostdlib -m32
 # generic source files
 # If platform == x86
 OBJ	+= $(shell find './' -name '*.o')
 # else ...
-LD	= ./platform/x86/x86-32.ld 
+LD	= ./arch/$(ARCH)/x86-32.ld
 IMAGE	= powerkernel.iso
 
 # Build Rules
@@ -27,8 +26,8 @@ all: link
 
 .PHONY: compile
 compile:
-	$(MAKE) -C platform/x86 all
-	$(MAKE) -C src all
+	ARCH=$(ARCH) $(MAKE) -C arch all
+	ARCH=$(ARCH) $(MAKE) -C kernel all
 
 .PHONY: link
 link: compile
@@ -38,7 +37,7 @@ link: compile
 iso: all
 	mkdir ./tmp
 	mkdir ./tmp/boot
-	cp -R platform/x86/boot/grub tmp/boot/grub
+	ARCH=$(ARCH) $(MAKE) -C arch iso
 	cp ./bin/$(TARGET).bin ./tmp/boot/$(TARGET).bin
 	grub-mkrescue -o $(IMAGE) tmp
 	rm -rf ./tmp
@@ -52,8 +51,8 @@ boot: iso clean
 
 .PHONY: clean
 clean:
-	$(MAKE) -C src clean
-	$(MAKE) -C platform/x86 clean
+	ARCH=$(ARCH) $(MAKE) -C kernel clean
+	ARCH=$(ARCH) $(MAKE) -C arch clean
 	find . -name '*.gch' -delete
 
 .PHONY: reset

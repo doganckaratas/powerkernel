@@ -11,7 +11,7 @@
 #include <stdint.h>
 
 /**
- * @brief 16 Bit color escape strings for serial terminal 
+ * @brief 16 Bit color escape strings for serial terminal
  */
 #define	NORM	"\033[0m"
 #define	BLACK	"\033[30m"

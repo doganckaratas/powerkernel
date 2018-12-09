@@ -2,8 +2,8 @@
 
 CC = i686-elf-gcc
 MAKE = make
-CFLAGS = -I./include -I../../src/include -std=gnu99 -ffreestanding -O0 -Wall 
-CFLAGS += -Werror -Wextra -pedantic -fstrength-reduce -fomit-frame-pointer 
+CFLAGS = -I./include -I../../kernel/include -std=gnu99 -ffreestanding -O0 -Wall
+CFLAGS += -Werror -Wextra -pedantic -fstrength-reduce -fomit-frame-pointer
 CFLAGS += -Wno-uninitialized -masm=intel
 
 SRC_X86 = $(wildcard *.c)
