@@ -11,9 +11,9 @@ all:
 
 .PHONY: iso
 iso:
-	ifeq($(ARCH), x86)
-		cp -R $(ARCH)/boot/grub ../tmp/boot/grub
-	endif
+ifeq ($(ARCH), x86)
+	@cp -R $(ARCH)/boot/grub ../tmp/boot/grub
+endif
 
 .PHONY: clean
 clean:

@@ -34,8 +34,14 @@ void memset(void *dest, int data, size_t size)
  */
 void memcpy(void *dst, void *src, size_t size)
 {
-	for ( ; size ; size--, ((uint8_t *) dst)++, ((uint8_t *) src)++) {
+// 	for ( ; size ; size--, ((uint8_t *) dst)++, ((uint8_t *) src)++) {
+// 		*((uint8_t *) dst) = *((uint8_t *) src);
+// 	}
+
+	for (; size; size--) {
 		*((uint8_t *) dst) = *((uint8_t *) src);
+		dst = (uint8_t *) dst + 1;
+		src = (uint8_t *) src + 1;
 	}
 }
 

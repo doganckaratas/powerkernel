@@ -57,5 +57,5 @@ clean:
 
 .PHONY: reset
 reset: clean
-	rm -rf $(IMAGE) ./bin/$(TARGET).bin ./boot/$(TARGET).bin
+	rm -rf $(IMAGE) ./bin/$(TARGET).bin ./boot/$(TARGET).bin tmp
 
