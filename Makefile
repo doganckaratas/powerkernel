@@ -31,16 +31,17 @@ compile:
 
 .PHONY: link
 link: compile
+	@mkdir ./bin
 	$(CC) -T $(LD) -o ./bin/$(TARGET).bin $(LDFLAGS) $(OBJ)
 
 .PHONY: iso
 iso: all
-	mkdir ./tmp
-	mkdir ./tmp/boot
+	@mkdir ./tmp
+	@mkdir ./tmp/boot
 	ARCH=$(ARCH) $(MAKE) -C arch iso
-	cp ./bin/$(TARGET).bin ./tmp/boot/$(TARGET).bin
-	grub-mkrescue -o $(IMAGE) tmp
-	rm -rf ./tmp
+	@cp ./bin/$(TARGET).bin ./tmp/boot/$(TARGET).bin
+	@grub-mkrescue -o $(IMAGE) tmp
+	@rm -rf ./tmp
 
 .PHONY: boot
 boot: iso clean
@@ -53,9 +54,9 @@ boot: iso clean
 clean:
 	ARCH=$(ARCH) $(MAKE) -C kernel clean
 	ARCH=$(ARCH) $(MAKE) -C arch clean
-	find . -name '*.gch' -delete
+	@find . -name '*.gch' -delete
 
 .PHONY: reset
 reset: clean
-	rm -rf $(IMAGE) ./bin/$(TARGET).bin ./boot/$(TARGET).bin tmp
+	@rm -rf $(IMAGE) ./bin/$(TARGET).bin ./boot/$(TARGET).bin tmp bin
 
