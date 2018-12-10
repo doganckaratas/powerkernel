@@ -33,7 +33,7 @@ ls ~/
 source ~/.profile
 rm -rf /tmp/i686-elf-4.9.1-Linux-x86_64
 rm /tmp/i686-elf-4.9.1-Linux-x86_64.tar.xz
-rm -rf /i686-elf.tar.xz
+rm -rf /tmp/i686-elf.tar.xz
 fi
 echo "[>] i686-elf bulundu."
 if ! which nasm > /dev/null; then 
