@@ -1,28 +1,30 @@
 # Platform = x86-32
 
-CC = i686-elf-gcc
-MAKE = make
-CFLAGS = -I./include -I../../kernel/include -std=gnu99 -ffreestanding -O0 -Wall
-CFLAGS += -Werror -Wextra -pedantic -fstrength-reduce -fomit-frame-pointer
-CFLAGS += -Wno-uninitialized -masm=intel
+CC	= i686-elf-gcc
+MAKE	= make
+CFLAGS	= -I./include -I../../kernel/include -std=gnu99 -ffreestanding -O0 -Wall
+CFLAGS	+= -Werror -Wextra -pedantic -fstrength-reduce -fomit-frame-pointer
+CFLAGS	+= -Wno-uninitialized -masm=intel
 
-SRC_X86 = $(wildcard *.c)
-OBJ_X86 = $(SRC_X86:.c=.o)
-DEP_X86 = $(OBJ_X86:.o=.d)
+SRC 	= io.c \
+	  serial.c
+
+OBJ	= $(SRC:.c=.o)
+DEP	= $(OBJ:.o=.d)
 
 .PHONY: all
-all: $(OBJ_X86)
+all: $(OBJ)
 	$(MAKE) -C boot all
 
-$(DEP_X86): %.d:%.c
+$(DEP): %.d:%.c
 	$(CC) $(CFLAGS) -MM $< >$@
 
-$(OBJ_X86): $(SRC_X86)
+$(OBJ): $(SRC)
 	$(CC) $(CFLAGS) -c $^
 
--include $(DEP_X86)
+-include $(DEP)
 
 .PHONY: clean
 clean:
 	$(MAKE) -C boot clean
-	rm -rf $(OBJ_X86) $(DEP_X86)
+	rm -rf $(OBJ) $(DEP)

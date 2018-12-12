@@ -1,7 +1,7 @@
 # Platform
 
-CC = i686-elf-gcc
-MAKE = make
+CC	= i686-elf-gcc
+MAKE	= make
 
 
 .PHONY: all
