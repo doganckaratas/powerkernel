@@ -23,10 +23,16 @@ press ctrl+a c. for old mode, edit makefile, change line -serial mon:stdio to
 ## Root Makefile Targets
 
 make assemble --> Assembles bootloader for target architecture
+
 make compile --> Compiles all sources to object files
+
 make link --> Links all object files into a single kernel binary
+
 make iso --> Prepares a bootable ISO that includes kernel & bootloader
+
 make clean --> Removes all object files
+
 make prune --> Removes all object files & end products
+
 make boot --> Executes qemu with produced ISO file
 
