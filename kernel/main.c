@@ -26,12 +26,6 @@
 extern "C"
 #endif
 
-// FS KURDUKTAN SONRA FAT32 YADA BAŞKA BİR FS HEADER'INI EZMEDEN BOOTLOADER KAS.
-// memory allocator şart
-
-// ilerde her bir fonksiyona özel c dosyasi olmali, klasorler hiyerarsik olmali..
-// bundled c dosyalari gereksiz.
-
 void test_serial();
 
 /**
@@ -71,6 +65,3 @@ void test_serial()
 	}
 	serial_send("Received: %s\r\n", str);
 }
-
-
-// kernel tum islemleri yaptiktan somra frontend e handoff yapmali

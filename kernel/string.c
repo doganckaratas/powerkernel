@@ -34,10 +34,6 @@ void memset(void *dest, int data, size_t size)
  */
 void memcpy(void *dst, void *src, size_t size)
 {
-// 	for ( ; size ; size--, ((uint8_t *) dst)++, ((uint8_t *) src)++) {
-// 		*((uint8_t *) dst) = *((uint8_t *) src);
-// 	}
-
 	for (; size; size--) {
 		*((uint8_t *) dst) = *((uint8_t *) src);
 		dst = (uint8_t *) dst + 1;
@@ -56,14 +52,10 @@ void memcpy(void *dst, void *src, size_t size)
 int memcmp(void *dst, void *src, size_t size)
 {
 	char *buf1 = dst, *buf2 = src;
-	for(size_t i = 0; i < size; i++)
-	{
-		if(buf1[i] == buf2[i])
-		{
+	for(size_t i = 0; i < size; i++) {
+		if(buf1[i] == buf2[i]) {
 			continue;
-		}
-		else
-		{
+		} else {
 			return -1;
 		}
 	}
@@ -79,8 +71,9 @@ int memcmp(void *dst, void *src, size_t size)
 size_t strlen(const char* str)
 {
 	size_t ret = 0;
-	while ( str[ret] != 0 )
+	while (str[ret] != 0) {
 		ret++;
+	}
 	return ret;
 }
 
@@ -93,13 +86,11 @@ size_t strlen(const char* str)
  */
 void strcpy(char* dst, char* src)
 {
-	for(int i = 0; i < (int) strlen(dst); i++)
-	{
+	for(int i = 0; i < (int) strlen(dst); i++) {
 		dst[i] = '\0';
 	}
 
-	for(int i = 0; i < (int)strlen(src); i++)
-	{
+	for(int i = 0; i < (int)strlen(src); i++) {
 		dst[i] = src[i];
 	}
 }
@@ -114,14 +105,10 @@ void strcpy(char* dst, char* src)
 int strseek(char* str, char delimiter)
 {
 	int count = 0;
-	for(int i = 0; i < (int) strlen(str); i++)
-	{
-		if(str[i] == delimiter)
-		{
+	for(int i = 0; i < (int) strlen(str); i++) {
+		if(str[i] == delimiter)	{
 			count++;
-		}
-		else
-		{
+		} else {
 			continue;
 		}
 	}
@@ -167,10 +154,11 @@ char* itoa(int val, int base) // val == 0 workaround'u acil degismeli.
 	if (val == 0) // quick workaround FIXME
 		return "0";
 	static char buf[32] = {0};
-
 	int i = 30;
 
-	for(; val && i ; --i, val /= base)
+	for(; val && i ; --i, val /= base) {
 		buf[i] = "0123456789abcdef"[val % base];
+	}
+
 	return (char* ) &buf[i+1];
 }
