@@ -22,16 +22,11 @@ fi
 echo "[+] gerekli paketler denetleniyor."
 if [ ! -d /opt/cross ]; then
 echo "[!] i686-elf bulunamadı. yükleniyor..."
-cd /tmp/
-wget https://www.dropbox.com/s/2nwjav50uxz6d46/i686-elf-4.9.1-Linux-x86_64.tar.xz?dl=0 --output-document i686-elf.tar.xz --no-check-certificate
+wget https://www.dropbox.com/s/2nwjav50uxz6d46/i686-elf-4.9.1-Linux-x86_64.tar.xz?dl=0 -O /tmp/i686-elf.tar.xz --no-check-certificate
 tar xf i686-elf.tar.xz
-cd i686-elf-4.9.1-Linux-x86_64
 mkdir /opt/cross
 cp -R /tmp/i686-elf-4.9.1-Linux-x86_64/* /opt/cross
-echo "PATH=/opt/cross/bin:$PATH" >> ~/.profile
-ls ~/
-source ~/.profile
-rm -rf /tmp/i686-elf-4.9.1-Linux-x86_64
+echo "PATH=$PATH:/opt/cross/bin" >> ~/.profile
 rm /tmp/i686-elf-4.9.1-Linux-x86_64.tar.xz
 rm -rf /tmp/i686-elf.tar.xz
 fi
