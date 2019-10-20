@@ -50,10 +50,10 @@ iso: all
 
 .PHONY: boot
 boot: iso clean
-	@echo "qemu-system-i386 -m 64M -cdrom $(IMAGE) -serial mon:stdio"
+	@echo "qemu-system-i386 -nographic -m 64M -cdrom $(IMAGE) -serial mon:stdio"
 	@echo "Boot Emulation Starting..."
 	@echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-	@qemu-system-i386 -m 64M -cdrom $(IMAGE) -serial mon:stdio
+	@qemu-system-i386 -nographic -m 64M -cdrom $(IMAGE) -serial mon:stdio
 
 .PHONY: clean
 clean:
