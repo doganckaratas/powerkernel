@@ -96,6 +96,76 @@ void strcpy(char* dst, char* src)
 }
 
 /**
+ * @fn         int strcmp(char *str1, char *str2)
+ * @brief      returns the comparison result of the two strings, str1 and str2
+ * @param[in]  str1 input string 1
+ * @param[in]  str2 input string 2
+ * @return     string comparison result, < 0 if str1 > str2, > 0 if str1 < str2, 0 if both equal.
+ */
+int strcmp(char *str1, char *str2)
+{
+	int i = 0;
+	int str1len = strlen(str1);
+	int str2len = strlen(str2);
+	if (str1len == str2len) {
+		for (i = 0; i < str1len; i++) {
+			if (str1[i] != str2[i]) {
+				if ((int) str1[i] > (int) str2[i]) {
+					return -1;
+				} else {
+					return 1;
+				}
+			}
+		}
+		return 0;
+	} else if (str1len > str2len) {
+		return -1;
+	} else {
+		return 1;
+	}
+}
+
+/**
+ * @fn         int strncmp(char *str1, char *str2, int nmemb)
+ * @brief      returns the comparison result of the two strings, str1 and str2 with nmemb character limit
+ * @param[in]  str1 input string 1
+ * @param[in]  str2 input string 2
+ * @param[in]  nmemb character count for comparison
+ * @return     string comparison result, < 0 if str1 > str2, > 0 if str1 < str2, 0 if both equal.
+ */
+int strncmp(char *str1, char *str2, int nmemb)
+{
+	int i = 0;
+
+	int str1len = strlen(str1);
+	int str2len = strlen(str2);
+	if (nmemb > str1len || nmemb > str2len) {
+		if (str1len > str2len) {
+			return -1;
+		} else {
+			return 1;
+		}
+	} else {
+		if (str1len == str2len) {
+			for (i = 0; i < nmemb; i++) {
+				if (str1[i] != str2[i]) {
+					if ((int) str1[i] > (int) str2[i]) {
+						return -1;
+					} else {
+						return 1;
+					}
+				}
+			}
+			return 0;
+		} else if (str1len > str2len) {
+			return -1;
+		} else {
+			return 1;
+		}
+	}
+}
+
+/**
  * @fn         int strseek(char *str, char *delimiter)
  * @brief      returns the number of occurences of delimiter in string
  * @param[in]  str input string

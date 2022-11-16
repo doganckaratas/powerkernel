@@ -26,7 +26,7 @@
 extern "C"
 #endif
 
-void test_serial();
+char *test_serial();
 
 /**
  * @fn         void kernel_main()
@@ -39,12 +39,20 @@ void kernel_main()
 	serial_send(LRED"PowerKernel 0.3.240718"NORM"\r\n"
 			"(c) 2011 - 2018 Dogan C. Karatas."
 			" All Rights Reserved.\r\n");
-	test_serial();
+	char *c;
+	while (1) {
+		c = test_serial();
+		if (strncmp(c, "exit", 4) == 0) {
+			serial_send("halt!\r\n");
+			break;
+		}
+	}
 }
 
-void test_serial()
+char *test_serial()
 {
 	/* test for serial recv */
+	serial_send(">> ");
 	char k = 0;
 	int i = 0;
 	char *str;
@@ -53,6 +61,11 @@ void test_serial()
 	memset(str, 0, 32);
 	while (1) {
 		serial_recv_char(&k);
+		if (k == 8) {
+			serial_send_char(8);
+			continue;
+		}
+
 		if (k == 13) {
 			break;
 		}
@@ -60,8 +73,11 @@ void test_serial()
 			continue;
 		}
 		*(str + i) = k;
+		/* echo back*/
+		serial_send_char(k);
 		i++;
 		k = 0;
 	}
-	serial_send("Received: %s\r\n", str);
+	serial_send("\r\nReceived: %s\r\n", str);
+	return str;
 }
